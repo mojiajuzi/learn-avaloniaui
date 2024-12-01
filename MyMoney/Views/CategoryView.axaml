@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:MyMoney.ViewModels"
+             x:Class="MyMoney.Views.CategoryView"
+             x:DataType="vm:CategoryViewModel"
+             xmlns:local = "clr-namespace:MyMoney.Services"
+             >
+    <StackPanel>
+        <DataGrid  x:Name="Root" Margin="20" ItemsSource="{Binding Categories}"
+               AutoGenerateColumns="False"
+               GridLinesVisibility="All"
+               CanUserResizeColumns="True"
+               CanUserReorderColumns="False"
+               CanUserSortColumns="True"
+               IsReadOnly="True"
+               BorderThickness="1">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Id"  Binding="{Binding Id}"/>
+            <DataGridTextColumn Header="名称"  Binding="{Binding Name}"/>
+            <DataGridTemplateColumn Header="状态">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ToggleSwitch IsChecked="{Binding Status, Converter={local:EnumToBoolConverter},ConverterParameter=Active}"
+                                      Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ToggleSwitchChangedCommand}"
+                                      CommandParameter="{Binding .}"
+                                      >
+                        </ToggleSwitch>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="创建时间" Binding="{Binding CreatedAt}" />
+            <DataGridTextColumn Header="更新时间" Binding="{Binding UpdatedAt}" />
+        </DataGrid.Columns>
+    </DataGrid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Previous" Command="{Binding GoToPreviousPageCommand}" />
+            <TextBlock Text="{Binding CurrentPage}" Margin="10,0" />
+            <TextBlock Text="/" />
+            <TextBlock Text="{Binding TotalPages}" Margin="10,0" />
+            <Button Content="Next" Command="{Binding GoToNextPageCommand}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

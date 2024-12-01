@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\code\\blazor\\MyMoney\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}|MyMoney\\MyMoney.csproj|d:\\code\\blazor\\mymoney\\mymoney\\views\\tagview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}|MyMoney\\MyMoney.csproj|solutionrelative:mymoney\\views\\tagview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}|MyMoney\\MyMoney.csproj|d:\\code\\blazor\\mymoney\\mymoney\\views\\tagview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{EBFA8512-1EA5-4D8C-B4AC-AB5B48A6D568}|MyMoney\\MyMoney.csproj|solutionrelative:mymoney\\views\\tagview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TagView.axaml",
+              "DocumentMoniker": "D:\\code\\blazor\\MyMoney\\MyMoney\\Views\\TagView.axaml",
+              "RelativeDocumentMoniker": "MyMoney\\Views\\TagView.axaml",
+              "ToolTip": "D:\\code\\blazor\\MyMoney\\MyMoney\\Views\\TagView.axaml",
+              "RelativeToolTip": "MyMoney\\Views\\TagView.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-29T15:29:42.326Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TagView.axaml.cs",
+              "DocumentMoniker": "D:\\code\\blazor\\MyMoney\\MyMoney\\Views\\TagView.axaml.cs",
+              "RelativeDocumentMoniker": "MyMoney\\Views\\TagView.axaml.cs",
+              "ToolTip": "D:\\code\\blazor\\MyMoney\\MyMoney\\Views\\TagView.axaml.cs",
+              "RelativeToolTip": "MyMoney\\Views\\TagView.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-29T15:29:42.287Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
