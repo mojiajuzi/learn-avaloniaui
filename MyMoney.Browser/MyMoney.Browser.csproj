@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Browser"/>
         <PackageReference Include="Avalonia.Controls.DataGrid" />
+        <PackageReference Include="MessageBox.Avalonia" />
     </ItemGroup>
 
     <ItemGroup>

@@ -37,6 +37,14 @@ public partial class CategoryViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    private void DeleteCategory(Category category)
+    {
+        var r = Categories.Remove(category);
+    }
+
+    public Category Category { get; set; }
+
     private  void GetCategories()
     {
         if (_categoryDataList.Count == 0)
@@ -44,7 +52,7 @@ public partial class CategoryViewModel : ViewModelBase
             for (var i = 0; i < 30; i++)
             {
                 _categoryDataList.Add(new Category(i+1,"test1",DateTime.Now,CategoryStatus.Active));
-            }   
+            }
         }
         int totalItems = _categoryDataList.Count;
         TotalPages = (totalItems +ItemsPerPage -1) / ItemsPerPage;
@@ -79,5 +87,11 @@ public partial class CategoryViewModel : ViewModelBase
     private IEnumerable<Category> GetCategoryForPage(int pageNumber)
     {
         return _categoryDataList.Skip((pageNumber -1) *ItemsPerPage).Take(ItemsPerPage);
+    }
+    
+    public void addCategory(Category category)
+    {
+        _categoryDataList.Add(category);
+        GetCategories();
     }
 }

@@ -3,6 +3,61 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="MyMoney.Views.TagView">
-    <TextBlock Text="where is TagView windown"></TextBlock>
+             xmlns:vm = "clr-namespace:MyMoney.ViewModels"
+             x:Class="MyMoney.Views.TagView"
+             x:DataType="vm:TagViewModel"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="84*"></RowDefinition>
+            <RowDefinition Height="8*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <DockPanel Height="80" Margin="20">
+                <Button DockPanel.Dock="Left" Content="New" Click="CreateTagClick"></Button>
+                <Popup Name="TagCreatePopup" IsOpen="False">
+                    <Border Background="White" BorderThickness="1" BorderBrush="Gray">
+                        <StackPanel Width="300" Height="200" Spacing="20" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="Create New Tag"></TextBlock>
+                            <TextBox Name="Name"  Watermark="please input you tag name" Text="{Binding TagData.Name}"></TextBox>
+                            <ToggleSwitch Name="Status" IsChecked="{Binding TagData.Status}"></ToggleSwitch>
+                            <UniformGrid Rows="1" Columns="2">
+                                <Button Click="TagCancelClick" Content="Cancel" ></Button>
+                                <Button HorizontalAlignment="Right" Click="TagSubmitClick" Content="Submit" ></Button>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </DockPanel>
+        </Grid>
+        <Grid Row="1">
+                <ItemsControl x:Name="Root"  ItemsSource="{Binding Tags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="20"
+                                CornerRadius="5"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                Padding="5"
+                                >
+                                <StackPanel Orientation="Vertical" Spacing="10">
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                    <ToggleSwitch IsChecked="{Binding Status}"></ToggleSwitch>
+                                    <TextBlock Text="{Binding UpdatedAt}"></TextBlock>
+                                        <Button HorizontalAlignment="Right"  Content="Delete" Margin="0,0,0,0" Command="{Binding #Root.((vm:TagViewModel)DataContext).RemoveTagItemCommand}" CommandParameter="{Binding .}"></Button>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+        </Grid>
+        <Grid Row="2"></Grid>
+    </Grid>
 </UserControl>
