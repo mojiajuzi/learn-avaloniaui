@@ -11,6 +11,33 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
-
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <SplitView 
+        IsPaneOpen="{Binding IsPanOpen}" 
+        OpenPaneLength="200" 
+        DisplayMode="CompactInline"
+        CompactPaneLength="50"
+        >
+        <SplitView.Pane>
+            <StackPanel Spacing="5" Margin="5">
+                <Button Command="{Binding TriggerPanCommand}">
+                    <PathIcon Data="{StaticResource LineHorizontal3}"></PathIcon>
+                </Button>
+                <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
+                            <StackPanel Spacing="15" Orientation="Horizontal">
+                                <PathIcon Data="{Binding Icon}"></PathIcon>
+                                <TextBlock Text="{Binding ViewModelName}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Border CornerRadius="12 0 0 0">
+                <TransitioningContentControl Content="{Binding CurrentPage}"></TransitioningContentControl>
+            </Border>
+        </SplitView.Content>
+    </SplitView>
 </UserControl>

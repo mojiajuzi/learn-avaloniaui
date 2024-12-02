@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:MyMoney.ViewModels"
+             x:Class="MyMoney.Views.CategoryView"
+             x:DataType="vm:CategoryViewModel"
+             xmlns:local = "clr-namespace:MyMoney.Services"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="84*"></RowDefinition>
+            <RowDefinition Height="8*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <DockPanel Height="80" Margin="20">
+                <Button DockPanel.Dock="Right" Content="New" Click="CreateCategoryClick"></Button>
+            </DockPanel>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,300">
+                <Popup Name="CreateCategoryPopup" IsOpen="False">
+                    <Border Background="White" BorderBrush="black" BorderThickness="1" Padding="10">
+                        <StackPanel Width="400" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+                            <TextBlock Text="Create New" FontWeight="Bold" HorizontalAlignment="Center" />
+                            <TextBox Name="Name" Watermark="Your Category Name"/>
+                            <ToggleSwitch Name="Status" Padding="20"/>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="20" Margin="30">
+                                <Button Content="取消" Click="CreateCategoryCancleClick"/>
+                                <Button Content="创建" Click="CreateCategorySubmitClick"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </StackPanel>
+        </Grid>
+        <Grid Row="1">
+            <DataGrid  x:Name="Root"  Margin="20" Padding="20" ItemsSource="{Binding Categories}"
+                       IsReadOnly="True"
+                       GridLinesVisibility="All"
+                       BorderThickness="1" 
+                       BorderBrush="Gray"
+                       HorizontalAlignment="Center"
+                       >
+                <DataGrid.Columns>
+                    <DataGridTextColumn  Header="Id" Width="*"  Binding="{Binding Id}">
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Name" Width="*"  Binding="{Binding Name}"/>
+                    <DataGridTemplateColumn Header="Status" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ToggleSwitch Margin="20,0" IsChecked="{Binding Status, Converter={local:EnumToBoolConverter},ConverterParameter=Active}"
+                                              Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ToggleSwitchChangedCommand}"
+                                              CommandParameter="{Binding .}"
+                                >
+                                </ToggleSwitch>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="createdAt" Width="*" Binding="{Binding CreatedAt}" />
+                    <DataGridTextColumn Header="updatedAt" Width="*" Binding="{Binding UpdatedAt}" />
+                    <DataGridTemplateColumn Header="Action" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="20,0">
+                                    <Button Margin="0,8" Content="Delete" 
+                                            Command="{Binding #Root.((vm:CategoryViewModel)DataContext).DeleteCategoryCommand}"
+                                            CommandParameter="{Binding .}"
+                                            ></Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Row="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Previous" Command="{Binding GoToPreviousPageCommand}" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20, 0">
+                    <TextBlock Text="{Binding CurrentPage}" Margin="10,0" />
+                    <TextBlock Text="/" />
+                    <TextBlock Text="{Binding TotalPages}" Margin="10,0" />
+                </StackPanel>
+                <Button Content="Next" Command="{Binding GoToNextPageCommand}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
