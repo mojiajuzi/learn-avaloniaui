@@ -10,22 +10,27 @@ namespace MyMoney.ViewModels;
 
 public partial class CategoryViewModel : ViewModelBase
 {
-    private const int ItemsPerPage = 10;
+    private const int ItemsPerPage = 15;
+
+    private List<Category> _categoryDataList = new List<Category>();
+
+    [ObservableProperty] 
+    private int _currentPage = 1;
+
+    [ObservableProperty] private CategoryStatus _status;
 
     [ObservableProperty]
     private int _totalPages = 0;
 
-    [ObservableProperty] 
-    private int _currentPage = 1;
-    public ObservableCollection<Category> Categories { get; set; }
-    
-    private List<Category> _categoryDataList = new List<Category>();
-    [ObservableProperty] private CategoryStatus _status;
     public CategoryViewModel()
     {
         Categories = new ObservableCollection<Category>();
         GetCategories();
     }
+
+    public ObservableCollection<Category> Categories { get; set; }
+
+    public Category Category { get; set; }
 
     [RelayCommand]
     private void ToggleSwitchChanged(Category category)
@@ -42,8 +47,6 @@ public partial class CategoryViewModel : ViewModelBase
     {
         var r = Categories.Remove(category);
     }
-
-    public Category Category { get; set; }
 
     private  void GetCategories()
     {
@@ -88,7 +91,7 @@ public partial class CategoryViewModel : ViewModelBase
     {
         return _categoryDataList.Skip((pageNumber -1) *ItemsPerPage).Take(ItemsPerPage);
     }
-    
+
     public void addCategory(Category category)
     {
         _categoryDataList.Add(category);
