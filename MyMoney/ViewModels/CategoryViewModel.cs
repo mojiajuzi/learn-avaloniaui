@@ -52,10 +52,7 @@ public partial class CategoryViewModel : ViewModelBase
     {
         if (_categoryDataList.Count == 0)
         {
-            for (var i = 0; i < 30; i++)
-            {
-                _categoryDataList.Add(new Category(i+1,"test1",DateTime.Now,CategoryStatus.Active));
-            }
+            _categoryDataList = Category.getGenareData();
         }
         int totalItems = _categoryDataList.Count;
         TotalPages = (totalItems +ItemsPerPage -1) / ItemsPerPage;

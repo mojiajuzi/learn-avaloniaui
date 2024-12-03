@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Avalonia.Controls;
 
 namespace MyMoney.Models;
@@ -20,8 +21,17 @@ public class Category : BaseModel
 
     public string Name { get; set; }
     public CategoryStatus Status { get; set; }
-    
-    
+
+    public static List<Category> getGenareData()
+    {
+        var categories = new List<Category>();
+        for (var i = 0; i < 30; i++)
+        {
+            categories.Add(new Category(i+1,$"test{i}",DateTime.Now,CategoryStatus.Active));
+        }
+
+        return categories;
+    }
 }
 
 public enum CategoryStatus

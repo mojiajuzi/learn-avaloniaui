@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,21 +14,12 @@ public partial class TagViewModel:ViewModelBase
 
     public TagViewModel()
     {
-        Tags = GenerateList();
-    }
+        Tags = new ObservableCollection<Tag>(GenerateList());
+    } 
 
-    private static ObservableCollection<Tag> GenerateList()
+    private static List<Tag> GenerateList()
     {
-        return
-        [
-            new Tag(name: "First1 Name", status: true),
-            new Tag(name: "First2 Name", status: true),
-            new Tag(name: "First3 Name", status: true),
-            new Tag(name: "First4 Name", status: true),
-            new Tag(name: "First5 Name", status: true),
-            new Tag(name: "First6 Name", status: true)
-
-        ];
+        return Tag.GetGenerateData();
     }
 
     public bool AddTagItem()

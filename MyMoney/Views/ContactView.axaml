@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm = "clr-namespace:MyMoney.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MyMoney.Views.ContactView"
+             x:DataType="vm:ContactViewModel"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="84*"></RowDefinition>
+            <RowDefinition Height="8*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Row="0">
+            <DockPanel>
+                <Button DockPanel.Dock="Left" Content="Add" Click="ContactCreateClick"></Button>
+                <Popup Name="ContactCreatePopup" IsOpen="False">
+                    <Border Width="500" Height="600" BorderThickness="1" BorderBrush="Gray">
+                        <StackPanel Spacing="20" Margin="20">
+                            <TextBox Name="Name" Text="{Binding ContactData.Name}" Watermark="input contact name"></TextBox>
+                            <TextBox Name="Email" Text="{Binding ContactData.Email}" Watermark="Email"></TextBox>
+                            <TextBox Name="Phone" Text="{Binding ContactData.Phone}" Watermark="Phone"></TextBox>
+                            <TextBox Name="Wechat" Text="{Binding ContactData.Wechat}" Watermark="Wechat"></TextBox>
+                            <TextBox Name="Qq" Text="{Binding ContactData.QQ}" Watermark="QQ"></TextBox>
+                            <TextBox Name="Remark" Text="{Binding ContactData.Remark}" Watermark="Remark"></TextBox>
+                            <StackPanel>
+                                <TextBlock Text="please select category:"></TextBlock>
+                                <ComboBox 
+                                    ItemsSource="{Binding CategoryDataList}" 
+                                    SelectedIndex="0"
+                                    Width="200"
+                                    SelectedItem="{Binding ContactData.Category}"
+                                    MaxDropDownHeight="200"
+                                    >
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="please select Tags:"></TextBlock>
+                                <ListBox 
+                                    ItemsSource="{Binding TagDataList}" 
+                                    SelectedIndex="0"
+                                    SelectionMode="Multiple,Toggle"
+                                    SelectedItems="{Binding Tags}"
+                                >
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel></WrapPanel>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                            <UniformGrid Rows="1" Columns="2">
+                                <Button Click="ContactCancelClick" Content="Cancel" ></Button>
+                                <Button HorizontalAlignment="Right" Click="ContactSubmitClick" Content="Submit" ></Button>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </DockPanel>
+        </Grid>
+        <Grid Row="1"></Grid>
+        <Grid Row="2"></Grid>
+    </Grid>
+</UserControl>

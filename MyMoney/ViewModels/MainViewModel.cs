@@ -16,7 +16,8 @@ public partial class MainViewModel : ViewModelBase
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
     {
         new ListItemTemplate(typeof(CategoryViewModel),"Category","TagIcon"),
-        new ListItemTemplate(typeof(TagViewModel),"Tags","AppsListIcon")
+        new ListItemTemplate(typeof(TagViewModel),"Tags","AppsListIcon"),
+        new ListItemTemplate(typeof(ContactViewModel),"Contacts","AppsListIcon")
     };
     
     [ObservableProperty] private ListItemTemplate _selectedItem;
