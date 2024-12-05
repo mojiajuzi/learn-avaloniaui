@@ -12,6 +12,8 @@ using Avalonia.Platform.Storage;
 using MyMoney.Models;
 using MyMoney.Services;
 using MyMoney.ViewModels;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace MyMoney.Views;
 
@@ -20,34 +22,76 @@ public partial class ContactView : UserControl
     public ContactView()
     {
         InitializeComponent();
+        
+        // if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        // {
+        //     desktop.MainWindow.Deactivated += (_, _) =>
+        //     {
+        //         if (ContactCreatePopup.IsOpen)
+        //         {
+        //             ContactCreatePopup.IsOpen = false;
+        //         }
+        //     };
+        // }
     }
 
     private async void AvatarUploadButtonClick(object? sender, RoutedEventArgs e)
     {
-        var topLevel = TopLevel.GetTopLevel(this);
-        var pickedFile = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        try
         {
-            Title = "please select image to set avatar",
-            AllowMultiple = false,
-            FileTypeFilter = new[] { FilePickerFileTypes.ImageAll, FilePickerFileTypes.ImageAll }
-        });
-        //保存文件到项目目录中，并设置链接
-        if (pickedFile.Count > 0)
-        {
-            string flowPath = UserDataHandlerServices.GetUserUploadsFolderPath();
-            string name = pickedFile[0].Name;
-            string destinationPath = Path.Combine(flowPath, name);
+            // 获取顶层窗口
+            var topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel == null) return;
 
-            await using (var sourceStream = await pickedFile[0].OpenReadAsync())
+            // 打开文件选择器
+            var pickedFiles = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "选择头像图片",
+                AllowMultiple = false,
+                FileTypeFilter = new[] { FilePickerFileTypes.ImageAll }
+            });
+
+            if (pickedFiles.Count == 0) return;
+
+            var pickedFile = pickedFiles[0];
+
+            // 生成唯一的文件名，避免文件名冲突
+            string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(pickedFile.Name)}";
+            string uploadsPath = UserDataHandlerServices.GetUserUploadsFolderPath();
+            string destinationPath = Path.Combine(uploadsPath, uniqueFileName);
+
+            // 确保上传目录存在
+            Directory.CreateDirectory(uploadsPath);
+
+            // 读取并处理图片
+            await using (var sourceStream = await pickedFile.OpenReadAsync())
             {
                 var vm = DataContext as ContactViewModel;
-                var t = await Task.Run(() => Bitmap.DecodeToWidth(sourceStream, 200));
-                using (var destinationStream = File.Create(destinationPath))
+                if (vm == null) return;
+
+                // 将图片解码并调整大小
+                var bitmap = await Task.Run(() => Bitmap.DecodeToWidth(sourceStream, 200));
+
+                // 保存处理后的图片
+                await using (var fileStream = File.Create(destinationPath))
                 {
-                    sourceStream.CopyToAsync(destinationStream);
-                    vm?.SetContactAvatar(t, destinationPath);
+                    bitmap.Save(fileStream); // 直接保存处理后的图片
                 }
+
+                // 更新ViewModel
+                vm.SetContactAvatar(bitmap, destinationPath);
             }
+        }
+        catch (Exception ex)
+        {
+            // 处理错误
+            var messageBox = MessageBoxManager.GetMessageBoxStandard(
+                "错误",
+                $"上传图片时发生错误: {ex.Message}",
+                ButtonEnum.Ok,
+                Icon.Error
+            );
+            await messageBox.ShowAsync();
         }
     }
 

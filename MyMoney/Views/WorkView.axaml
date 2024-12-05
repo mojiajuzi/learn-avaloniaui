@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:MyMoney.ViewModels"
+             xmlns:model="clr-namespace:MyMoney.Models"
+             x:DataType="vm:WorkViewModel"
+             x:Class="MyMoney.Views.WorkView">
+    <Border Margin="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*"></RowDefinition>
+                <RowDefinition Height="84*"></RowDefinition>
+                <RowDefinition Height="8*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid>
+                <DockPanel>
+                    <Button DockPanel.Dock="Left" Content="Add" Click="WorkCreateClick"></Button>
+                </DockPanel>
+                <Popup Name="WorkCreatePopup"
+                       IsOpen="False"
+                       PlacementMode="AnchorAndGravity"
+                       PlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                       WindowManagerAddShadowHint="False">
+                    <Border Width="500" Height="300" Background="White" BorderThickness="1" BorderBrush="Gray"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel Spacing="10" HorizontalAlignment="Center" Margin="10">
+                            <TextBox Name="Name" Watermark="input work name" Text="{Binding WorkData.Name}"></TextBox>
+                            <TextBox Name="Description"
+                                     Watermark="input description:use the enter change line"
+                                     Text="{Binding WorkData.Description}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap">
+                            </TextBox>
+                            <TextBox Name="TotalMoney"
+                                     Text="{Binding WorkData.TotalMoney}"
+                                     Watermark="please input Total Money">
+                            </TextBox>
+                            <UniformGrid Rows="1" Columns="2">
+                                <Button Click="WorkCancelClick" Content="Cancel"></Button>
+                                <Button HorizontalAlignment="Right" Click="WorkSubmitClick" Content="Submit"></Button>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+            <Grid Row="1">
+                <ItemsControl ItemsSource="{Binding Works}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate x:DataType="{x:Type model:Work}">
+                            <Border HorizontalAlignment="Center" Padding="10">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBox Text="{Binding Id}"></TextBox>
+                                    <TextBox Text="{Binding Name}"></TextBox>
+                                    <TextBox Text="{Binding Status}"></TextBox>
+                                    <TextBox Text="{Binding TotalMoney}"></TextBox>
+                                    <TextBox Text="{Binding ReceivingPayment}"></TextBox>
+                                    <TextBox Text="{Binding StartAt}"></TextBox>
+                                    <TextBox Text="{Binding EndAt}"></TextBox>
+                                    <TextBox Text="{Binding ExceptionAt}"></TextBox>
+                                    <TextBox Text="{Binding CostMoney}"></TextBox>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.DataTemplates>
+                </ItemsControl>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

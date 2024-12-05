@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 namespace MyMoney.Models;
 
-public class Tag: BaseModel
+public class Tag : BaseModel
 {
     public string Name { get; set; } = null!;
     public bool Status { get; set; }
 
     public Tag()
     {
-        
     }
 
     public Tag(string name, bool status)
@@ -25,14 +24,12 @@ public class Tag: BaseModel
     {
         return
         [
-            new Tag(name: "First1 Name", status: true),
-            new Tag(name: "First2 Name", status: true),
-            new Tag(name: "First3 Name", status: true),
-            new Tag(name: "First4 Name", status: true),
-            new Tag(name: "First5 Name", status: true),
-            new Tag(name: "First6 Name", status: true)
-
+            new Tag(name: "First Project", status: true),
+            new Tag(name: "Second Projec", status: true),
+            new Tag(name: "Third Project", status: true),
+            new Tag(name: "F4", status: true),
+            new Tag(name: "F5", status: true),
+            new Tag(name: "F6", status: true)
         ];
     }
-    
 }

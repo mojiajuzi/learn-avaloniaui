@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MyMoney.Models;
 
 namespace MyMoney.ViewModels;
 
@@ -12,18 +13,19 @@ public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _isPanOpen = true;
     [ObservableProperty] private ViewModelBase _currentPage = new CategoryViewModel();
-    
+
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
     {
-        new ListItemTemplate(typeof(CategoryViewModel),"Category","TagIcon"),
-        new ListItemTemplate(typeof(TagViewModel),"Tags","AppsListIcon"),
-        new ListItemTemplate(typeof(ContactViewModel),"Contacts","AppsListIcon")
+        new ListItemTemplate(typeof(CategoryViewModel), "Category", "TagIcon"),
+        new ListItemTemplate(typeof(TagViewModel), "Tags", "AppsListIcon"),
+        new ListItemTemplate(typeof(ContactViewModel), "Contacts", "AppsListIcon"),
+        new ListItemTemplate(typeof(WorkViewModel), "Works", "CalendarWorkWeekRegular")
     };
-    
+
     [ObservableProperty] private ListItemTemplate _selectedItem;
+
     public MainViewModel()
     {
-
     }
 
     [RelayCommand]
@@ -34,16 +36,16 @@ public partial class MainViewModel : ViewModelBase
 
     partial void OnSelectedItemChanged(ListItemTemplate? value)
     {
-        if(value is null) return;
+        if (value is null) return;
         var instance = Activator.CreateInstance(value.ViewModelType);
-        if (instance is null) return; 
+        if (instance is null) return;
         CurrentPage = (ViewModelBase)instance;
     }
 }
 
 public class ListItemTemplate
 {
-    public ListItemTemplate(Type viewModelType, string viewModelName,string iconKey)
+    public ListItemTemplate(Type viewModelType, string viewModelName, string iconKey)
     {
         ViewModelType = viewModelType;
         ViewModelName = viewModelName;
@@ -53,6 +55,6 @@ public class ListItemTemplate
 
     public Type ViewModelType { get; set; }
     public string ViewModelName { get; set; }
-    
+
     public StreamGeometry Icon { get; set; }
 }
