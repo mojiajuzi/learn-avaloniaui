@@ -6,28 +6,34 @@
              xmlns:views="clr-namespace:MyMoney.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MyMoney.Views.MainView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:MainViewModel"
+             Background="{DynamicResource BackgroundBrush}">
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
+
     <SplitView IsPaneOpen="True"
                DisplayMode="CompactInline"
                OpenPaneLength="200"
                CompactPaneLength="48">
         <SplitView.Pane>
-            <Grid RowDefinitions="Auto,*,Auto">
+            <Grid RowDefinitions="Auto,*,Auto"
+                  Background="{DynamicResource CardBackgroundBrush}">
                 <StackPanel Grid.Row="1" Spacing="5">
-                    <Button Command="{Binding TriggerPanCommand}">
-                        <PathIcon Data="{StaticResource LineHorizontal3}"></PathIcon>
+                    <Button Command="{Binding TriggerPanCommand}"
+                            Classes="IconButton"
+                            Margin="8,4">
+                        <PathIcon Data="{StaticResource LineHorizontal3}" />
                     </Button>
-                    <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+
+                    <ListBox ItemsSource="{Binding Items}"
+                             SelectedItem="{Binding SelectedItem}"
+                             Margin="4,0">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
                                 <StackPanel Spacing="15" Orientation="Horizontal">
-                                    <PathIcon Data="{Binding Icon}"></PathIcon>
-                                    <TextBlock Text="{Binding ViewModelName}"></TextBlock>
+                                    <PathIcon Data="{Binding Icon}" />
+                                    <TextBlock Text="{Binding ViewModelName}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -35,29 +41,30 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="2"
-                            Margin="5,10"
+                            Margin="8"
                             Orientation="Vertical"
                             Spacing="10">
                     <ToggleButton Name="ThemeToggleButton"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Center"
-                                  IsChecked="{Binding #ThemeToggleButton.IsChecked}"
-                                  Checked="ThemeToggleButton_Checked"
-                                  Unchecked="ThemeToggleButton_Unchecked">
+                                  IsCheckedChanged="ThemeToggleButton_OnIsCheckedChanged">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <PathIcon Name="ThemeIcon"
-                                     Width="16" 
-                                     Height="16"
-                                     Data="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
-                            <TextBlock Name="ThemeText" Text="Light"/>
+                                      Width="16"
+                                      Height="16"
+                                      Data="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z" />
+                            <TextBlock Name="ThemeText"
+                                       Text="Light" />
                         </StackPanel>
                     </ToggleButton>
                 </StackPanel>
             </Grid>
         </SplitView.Pane>
+
         <SplitView.Content>
-            <Border CornerRadius="12 0 0 0">
-                <TransitioningContentControl Content="{Binding CurrentPage}"></TransitioningContentControl>
+            <Border CornerRadius="12 0 0 0"
+                    Background="{DynamicResource BackgroundBrush}">
+                <TransitioningContentControl Content="{Binding CurrentPage}" />
             </Border>
         </SplitView.Content>
     </SplitView>

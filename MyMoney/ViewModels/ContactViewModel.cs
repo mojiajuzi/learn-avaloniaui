@@ -28,31 +28,13 @@ public partial class ContactViewModel : ViewModelBase
 
     [ObservableProperty] private Bitmap? _avatar;
 
-
     public List<Tag> Tags { get; set; }
 
     public ContactViewModel()
     {
-        Contacts = new ObservableCollection<Contact>(GenerateContacts());
+        Contacts = new ObservableCollection<Contact>(Contact.GenerateContacts());
         ContactData = new Contact();
         Tags = [];
-    }
-
-    private static List<Contact> GenerateContacts()
-    {
-        var contacts = new List<Contact>()
-        {
-            new Contact()
-            {
-                Name = "John Doe",
-                Email = "johndoe@gmail.com",
-                Phone = "088888888",
-                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                Category = GenerateCategory()[0],
-                Tags = GenerateTag()
-            }
-        };
-        return contacts;
     }
 
     private static List<Category> GenerateCategory()

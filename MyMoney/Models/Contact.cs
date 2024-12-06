@@ -20,9 +20,10 @@ public class Contact : BaseModel
 
     public Contact()
     {
-        
     }
-    public Contact(string name,string email, string phone,string wechat,string qq,string remark,bool status,string avatar)
+
+    public Contact(string name, string email, string phone, string wechat, string qq, string remark, bool status,
+        string avatar)
     {
         Name = name;
         Email = email;
@@ -34,5 +35,33 @@ public class Contact : BaseModel
         Avatar = avatar;
         CreatedAt = DateTime.Now;
         UpdatedAt = DateTime.Now;
+    }
+
+    public static List<Contact> GenerateContacts()
+    {
+        return new List<Contact>()
+        {
+            new Contact()
+            {
+                Name = "John one",
+                Email = "johndoe@gmail.com",
+                Phone = "088888888",
+                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
+            },
+            new Contact()
+            {
+                Name = "John Two",
+                Email = "johndoe@gmail.com",
+                Phone = "088888888",
+                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
+            },
+            new Contact()
+            {
+                Name = "John Three",
+                Email = "johndoe@gmail.com",
+                Phone = "088888888",
+                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
+            },
+        };
     }
 }

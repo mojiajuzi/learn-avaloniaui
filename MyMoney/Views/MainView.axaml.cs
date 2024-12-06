@@ -1,6 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -14,20 +14,47 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        UpdateThemeIcon();
+        InitializeTheme();
     }
 
-    private void ThemeToggleButton_Checked(object? sender, RoutedEventArgs e)
+    private void InitializeTheme()
     {
-        _isDarkTheme = true;
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
-        UpdateThemeIcon();
+        var app = Application.Current;
+        if (app != null)
+        {
+            // 获取当前系统主题或保存的主题设置
+            var currentTheme = app.ActualThemeVariant;
+            _isDarkTheme = currentTheme == ThemeVariant.Dark;
+            
+            // 设置初始主题
+            app.RequestedThemeVariant = _isDarkTheme ? ThemeVariant.Dark : ThemeVariant.Light;
+            
+            // 更新UI状态
+            var toggleButton = this.FindControl<ToggleButton>("ThemeToggleButton");
+            if (toggleButton != null)
+            {
+                toggleButton.IsChecked = _isDarkTheme;
+            }
+            UpdateThemeIcon();
+        }
     }
 
-    private void ThemeToggleButton_Unchecked(object? sender, RoutedEventArgs e)
+    private void ThemeToggleButton_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        _isDarkTheme = false;
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        if (sender is ToggleButton toggleButton)
+        {
+            SetTheme(toggleButton.IsChecked ?? false);
+        }
+    }
+
+    private void SetTheme(bool isDark)
+    {
+        _isDarkTheme = isDark;
+        var app = Application.Current;
+        if (app != null)
+        {
+            app.RequestedThemeVariant = isDark ? ThemeVariant.Dark : ThemeVariant.Light;
+        }
         UpdateThemeIcon();
     }
 
@@ -35,7 +62,7 @@ public partial class MainView : UserControl
     {
         var themeIcon = this.FindControl<PathIcon>("ThemeIcon");
         var themeText = this.FindControl<TextBlock>("ThemeText");
-
+        
         if (themeIcon != null)
         {
             // 月亮图标（暗色主题）

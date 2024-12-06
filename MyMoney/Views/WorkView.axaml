@@ -7,7 +7,7 @@
              xmlns:model="clr-namespace:MyMoney.Models"
              x:DataType="vm:WorkViewModel"
              x:Class="MyMoney.Views.WorkView">
-    <Border Margin="20">
+    <Border Margin="20" Name="Root">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="8*"></RowDefinition>
@@ -23,7 +23,7 @@
                        PlacementMode="AnchorAndGravity"
                        PlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                        WindowManagerAddShadowHint="False">
-                    <Border Width="500" Height="300" Background="White" BorderThickness="1" BorderBrush="Gray"
+                    <Border Width="500" Height="500" Background="White" BorderThickness="1" BorderBrush="Gray"
                             HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel Spacing="10" HorizontalAlignment="Center" Margin="10">
                             <TextBox Name="Name" Watermark="input work name" Text="{Binding WorkData.Name}"></TextBox>
@@ -37,6 +37,85 @@
                                      Text="{Binding WorkData.TotalMoney}"
                                      Watermark="please input Total Money">
                             </TextBox>
+                            <StackPanel Spacing="8">
+                                <Grid>
+                                    <TextBox Classes="Search"
+                                             Name="SearchBox"
+                                             Watermark="Search contacts..."
+                                             Text="{Binding SearchText}"
+                                             GotFocus="SearchBox_OnGotFocus"
+                                             LostFocus="SearchBox_OnLostFocus" />
+                                    <Popup Name="ContactSearchPopup"
+                                           IsOpen="False"
+                                           PlacementMode="Bottom"
+                                           PlacementTarget="{Binding #SearchBox}"
+                                           WindowManagerAddShadowHint="False">
+                                        <Border Background="White"
+                                                Width="{Binding #SearchBox.Bounds.Width}"
+                                                MinHeight="50"
+                                                MaxHeight="200">
+                                            <ListBox ItemsSource="{Binding FilteredContacts}"
+                                                     SelectedItems="{Binding SelectedContacts}"
+                                                     SelectionMode="Multiple,Toggle">
+                                                <ListBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ListBox.ItemsPanel>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type model:Contact}">
+                                                        <Border Margin="2">
+                                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                <PathIcon Data="{StaticResource Person}"
+                                                                          Width="16"
+                                                                          Height="16" />
+                                                                <TextBlock Text="{Binding Name}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                                <Border Classes="Card" MinHeight="50">
+                                    <StackPanel>
+                                        <TextBlock Text="Selected Contacts:"
+                                                   Margin="0,0,0,8"
+                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
+                                        <ItemsControl ItemsSource="{Binding SelectedContacts}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type model:Contact}">
+                                                    <Border Classes="TagCard"
+                                                            Margin="2"
+                                                            Padding="8,4">
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Spacing="8">
+                                                            <PathIcon Data="{StaticResource Person}"
+                                                                      Width="12"
+                                                                      Height="12" />
+                                                            <TextBlock Text="{Binding Name}"
+                                                                       VerticalAlignment="Center" />
+                                                            <Button Classes="IconButton"
+                                                                    Width="16" Height="16"
+                                                                    Padding="2"
+                                                                    Command="{Binding #Root.((vm:WorkViewModel)DataContext).RemoveSelectedContactCommand}"
+                                                                    CommandParameter="{Binding}">
+                                                                <PathIcon Data="{StaticResource Close}" />
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
                             <UniformGrid Rows="1" Columns="2">
                                 <Button Click="WorkCancelClick" Content="Cancel"></Button>
                                 <Button HorizontalAlignment="Right" Click="WorkSubmitClick" Content="Submit"></Button>
