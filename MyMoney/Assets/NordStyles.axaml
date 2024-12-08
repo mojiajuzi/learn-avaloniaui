@@ -93,24 +93,24 @@
         <Setter Property="BoxShadow" Value="0 2 4 0 #20000000" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
-        <Setter Property="RenderTransform" Value="none"/>
+        <Setter Property="RenderTransform" Value="none" />
     </Style>
 
     <Style Selector="Border.Card:pointerover">
-        <Setter Property="BoxShadow" Value="0 4 8 0 #40000000"/>
-        <Setter Property="RenderTransform" Value="scale(1.02)"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BoxShadow" Value="0 4 8 0 #40000000" />
+        <Setter Property="RenderTransform" Value="scale(1.02)" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
     </Style>
 
     <Style Selector="Border.Popup">
         <Setter Property="Width" Value="400"></Setter>
         <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"></Setter>
-
+        <Setter Property="BoxShadow" Value="0 2 4 0 #20000000" />
     </Style>
 
     <Style Selector="ToggleSwitch">
@@ -139,9 +139,14 @@
     </Style>
 
     <Style Selector="StackPanel.icon">
-        <Setter Property="Orientation" Value="Horizontal"></Setter>
-        <Setter Property="Spacing" Value="8"></Setter>
-        <Setter Property="Margin" Value="4 4"></Setter>
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="Spacing" Value="8" />
+        <Setter Property="Margin" Value="4 4" />
+    </Style>
+
+    <Style Selector="StackPanel.icon > :is(Control)">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <Style Selector="NotificationCard">
@@ -184,7 +189,7 @@
         <Setter Property="Stretch" Value="UniformToFill" />
     </Style>
 
-    <!-- 添加��边框的头像容器样式 -->
+    <!-- 添加边框的头容器样式 -->
     <Style Selector="Border.avatarContainer">
         <Setter Property="Width" Value="80" />
         <Setter Property="Height" Value="80" />
@@ -203,5 +208,37 @@
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
         <Setter Property="BoxShadow" Value="0 1 2 0 #20000000" />
         <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="Border.tag">
+        <Setter Property="Background" Value="{DynamicResource SecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="ListBox.tagSelector">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ListBox.tagSelector ListBoxItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <Style Selector="ListBox.tagSelector ListBoxItem:selected Border.tag">
+        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+    </Style>
+
+    <Style Selector="ListBox.tagSelector ListBoxItem:pointerover Border.tag">
+        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="Opacity" Value="0.8" />
     </Style>
 </Styles>

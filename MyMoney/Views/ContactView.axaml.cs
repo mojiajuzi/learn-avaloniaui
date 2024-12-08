@@ -22,17 +22,6 @@ public partial class ContactView : UserControl
     public ContactView()
     {
         InitializeComponent();
-        
-        // if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        // {
-        //     desktop.MainWindow.Deactivated += (_, _) =>
-        //     {
-        //         if (ContactCreatePopup.IsOpen)
-        //         {
-        //             ContactCreatePopup.IsOpen = false;
-        //         }
-        //     };
-        // }
     }
 
     private async void AvatarUploadButtonClick(object? sender, RoutedEventArgs e)
@@ -93,22 +82,5 @@ public partial class ContactView : UserControl
             );
             await messageBox.ShowAsync();
         }
-    }
-
-    private void ContactCreateClick(object? sender, RoutedEventArgs e)
-    {
-        ContactCreatePopup.IsOpen = true;
-    }
-
-    private void ContactCancelClick(object? sender, RoutedEventArgs e)
-    {
-        ContactCreatePopup.IsOpen = false;
-    }
-
-    private void ContactSubmitClick(object? sender, RoutedEventArgs e)
-    {
-        var vm = DataContext as ContactViewModel;
-        vm?.AddContact();
-        ContactCreatePopup.IsOpen = false;
     }
 }

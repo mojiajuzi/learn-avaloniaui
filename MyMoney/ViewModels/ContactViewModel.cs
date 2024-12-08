@@ -20,7 +20,7 @@ public partial class ContactViewModel : ViewModelBase
 {
     public ObservableCollection<Contact> Contacts { get; set; }
 
-    [ObservableProperty] private Contact? _contactData;
+    [ObservableProperty] private Contact _contactData;
 
     [ObservableProperty] private List<Category> _categoryDataList = GenerateCategory();
 
@@ -28,13 +28,15 @@ public partial class ContactViewModel : ViewModelBase
 
     [ObservableProperty] private Bitmap? _avatar;
 
-    public List<Tag> Tags { get; set; }
+    [ObservableProperty] private bool _popupOpen;
+
+    [ObservableProperty] private List<Tag> _selectedTags;
+
+    [ObservableProperty] private Category? _selectedCategory;
 
     public ContactViewModel()
     {
         Contacts = new ObservableCollection<Contact>(Contact.GenerateContacts());
-        ContactData = new Contact();
-        Tags = [];
     }
 
     private static List<Category> GenerateCategory()
@@ -47,13 +49,69 @@ public partial class ContactViewModel : ViewModelBase
         return Tag.GetGenerateData().OrderBy(x => x.Name).ToList();
     }
 
-
-    public void AddContact()
+    [RelayCommand]
+    private void PopupOpenToggle()
     {
-        if (ContactData != null)
+        if (PopupOpen)
         {
-            ContactData.Tags = Tags;
+            ContactData = new Contact();
+            SelectedCategory = null;
+            SelectedTags = [];
+            Avatar = null;
+        }
+        else
+        {
+            ContactData = ContactData ?? new Contact();
+        }
+
+        PopupOpen = !PopupOpen;
+    }
+
+    [RelayCommand]
+    private void SubmitCommand()
+    {
+        PopupOpen = false;
+        if (ContactData.Id > 0)
+        {
+            var index = Contacts.IndexOf(Contacts.FirstOrDefault(x => x.Id == ContactData.Id));
+            Contacts.RemoveAt(index);
+            Contacts.Insert(index, ContactData);
+        }
+        else
+        {
             Contacts.Add(ContactData);
+        }
+
+        ContactData = null;
+    }
+
+    [RelayCommand]
+    private void ShowPopupToUpdate(Contact contact)
+    {
+        PopupOpen = true;
+
+        SelectedCategory = CategoryDataList.FirstOrDefault(c => c.Id == contact.Category?.Id);
+
+        var selectedTags = TagDataList.Where(t => contact.Tags?.Any(ct => ct.Id == t.Id) ?? false).ToList();
+        SelectedTags = new List<Tag>(selectedTags);
+
+        ContactData = new Contact
+        {
+            Id = contact.Id,
+            Name = contact.Name,
+            Email = contact.Email,
+            Phone = contact.Phone,
+            Wechat = contact.Wechat,
+            QQ = contact.QQ,
+            Remark = contact.Remark,
+            Avatar = contact.Avatar,
+            Category = SelectedCategory,
+            Tags = SelectedTags
+        };
+
+        if (!string.IsNullOrEmpty(contact.Avatar))
+        {
+            Avatar = new Bitmap(contact.Avatar);
         }
     }
 
@@ -67,5 +125,13 @@ public partial class ContactViewModel : ViewModelBase
     {
         if (ContactData != null) ContactData.Avatar = url;
         Avatar = img;
+    }
+
+    partial void OnSelectedTagsChanged(List<Tag> value)
+    {
+        if (ContactData != null)
+        {
+            ContactData.Tags = value;
+        }
     }
 }

@@ -43,24 +43,35 @@ public class Contact : BaseModel
         {
             new Contact()
             {
+                Id = 1,
                 Name = "John one",
                 Email = "johndoe@gmail.com",
                 Phone = "088888888",
                 Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
+                Tags = Tag.GetGenerateData().Slice(0, 2).ToList(),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Category = Models.Category.GetGenareData().First()
             },
             new Contact()
             {
+                Id = 2,
                 Name = "John Two",
                 Email = "johndoe@gmail.com",
                 Phone = "088888888",
                 Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
+                Tags = Tag.GetGenerateData().Slice(0, 2).ToList(),
+                Category = Models.Category.GetGenareData().First()
             },
             new Contact()
             {
+                Id = 3,
                 Name = "John Three",
                 Email = "johndoe@gmail.com",
                 Phone = "088888888",
                 Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
+                Tags = Tag.GetGenerateData().Slice(0, 2).ToList(),
+                Category = Models.Category.GetGenareData().First()
             },
         };
     }

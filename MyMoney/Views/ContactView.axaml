@@ -20,12 +20,12 @@
                 <RowDefinition Height="8*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <!--表单弹框 -->
+            <!--�� -->
             <Grid Row="0">
                 <Button
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Click="ContactCreateClick">
+                    Command="{Binding PopupOpenToggleCommand}">
                     <StackPanel Orientation="Horizontal">
                         <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
                         <TextBlock Text="Add"></TextBlock>
@@ -33,7 +33,7 @@
                 </Button>
             </Grid>
             <Popup Name="ContactCreatePopup"
-                   IsOpen="False"
+                   IsOpen="{Binding PopupOpen}"
                    Placement="AnchorAndGravity"
                    PlacementTarget="{Binding $parent[UserControl]}">
                 <Border Classes="Popup">
@@ -47,13 +47,11 @@
                                 CornerRadius="50"
                                 RenderOptions.BitmapInterpolationMode="HighQuality">
                             <Button.Content>
-                                <Border CornerRadius="50"
-                                        Background="#EEEEEE">
-                                    <Image Name="AvatarImage"
-                                           Source="{Binding Avatar, Mode=TwoWay}"
-                                           Stretch="UniformToFill"
-                                           Width="100"
-                                           Height="100">
+                                <Border Classes="avatarContainer">
+                                    <Image
+                                        Classes="avatar"
+                                        Name="AvatarImage"
+                                        Source="{Binding Avatar, Mode=TwoWay}">
                                     </Image>
                                 </Border>
                             </Button.Content>
@@ -68,13 +66,15 @@
                             <TextBlock Text="please select category:"></TextBlock>
                             <ComboBox
                                 ItemsSource="{Binding CategoryDataList}"
-                                SelectedIndex="0"
                                 Width="200"
+                                AutoScrollToSelectedItem="True"
                                 SelectedItem="{Binding ContactData.Category}"
                                 MaxDropDownHeight="200">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                        <Panel>
+                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                        </Panel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -82,10 +82,10 @@
                         <StackPanel>
                             <TextBlock Text="please select Tags:"></TextBlock>
                             <ListBox
+                                Classes="tagSelector"
                                 ItemsSource="{Binding TagDataList}"
-                                SelectedIndex="0"
                                 SelectionMode="Multiple,Toggle"
-                                SelectedItems="{Binding Tags}">
+                                SelectedItems="{Binding SelectedTags, Mode=TwoWay}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <WrapPanel></WrapPanel>
@@ -93,14 +93,25 @@
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                        <Border Classes="tag">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </StackPanel>
                         <UniformGrid Rows="1" Columns="2">
-                            <Button Click="ContactCancelClick" Content="Cancel"></Button>
-                            <Button HorizontalAlignment="Right" Click="ContactSubmitClick" Content="Submit"></Button>
+                            <Button
+                                Classes="Cancel"
+                                Command="{Binding PopupOpenToggleCommand}"
+                                Content="Cancel">
+                            </Button>
+                            <Button
+                                Classes="Update"
+                                HorizontalAlignment="Right"
+                                Command="{Binding SubmitCommandCommand}"
+                                Content="Submit">
+                            </Button>
                         </UniformGrid>
                     </StackPanel>
                 </Border>
@@ -134,15 +145,36 @@
                                             <i:Icon Value="fa-thin fa-envelope"></i:Icon>
                                             <TextBlock Text="{Binding Email}"></TextBlock>
                                         </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Classes="Action Update"
+                                                    Command="{Binding #Root.((vm:ContactViewModel)DataContext).ShowPopupToUpdateCommand}"
+                                                    CommandParameter="{Binding .}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <PathIcon Data="{StaticResource EditRegular}"></PathIcon>
+                                                    <TextBlock Text="Update"></TextBlock>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Classes="Action Delete"
+                                                    Command="{Binding #Root.((vm:ContactViewModel)DataContext).RemoveContactCommand}"
+                                                    CommandParameter="{Binding .}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <PathIcon Data="{StaticResource DeleteRegular}"></PathIcon>
+                                                    <TextBlock Text="Delete"></TextBlock>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
                                         <ItemsControl ItemsSource="{Binding Tags}" Padding="0,10">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <WrapPanel Orientation="Horizontal" />
+                                                    <WrapPanel Orientation="Horizontal"
+                                                               MaxWidth="200" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate DataType="{x:Type models:Tag}">
-                                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                                    <Border Classes="tag">
+                                                        <TextBlock Text="{Binding Name}" />
+                                                    </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>

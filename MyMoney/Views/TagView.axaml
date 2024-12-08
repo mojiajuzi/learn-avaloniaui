@@ -67,26 +67,20 @@
                         <DataTemplate>
                             <Border Classes="Card">
                                 <StackPanel Classes="Card">
-                                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
-                                        <TextBlock Grid.Row="0" Grid.Column="0"
-                                                   Text="Name:"
-                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
-                                        <TextBlock Grid.Row="0" Grid.Column="1"
-                                                   Text="{Binding Name}" />
-
-                                        <TextBlock Grid.Row="1" Grid.Column="0"
-                                                   Text="Status:"
-                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
-                                        <ToggleSwitch Grid.Row="1" Grid.Column="1"
-                                                      IsChecked="{Binding Status}" />
-
-                                        <TextBlock Grid.Row="2" Grid.Column="0"
-                                                   Text="Updated:"
-                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
-                                        <TextBlock Grid.Row="2" Grid.Column="1"
-                                                   Text="{Binding UpdatedAt, StringFormat={}{0:yyyy-MM-dd}}" />
-                                    </Grid>
-
+                                    <StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Name"></TextBlock>
+                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Status"></TextBlock>
+                                            <ToggleSwitch IsChecked="{Binding Status}"></ToggleSwitch>
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Update"></TextBlock>
+                                            <TextBlock Text="{Binding UpdatedAt, StringFormat={}{0:yyyy-MM-dd}}"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <Button Classes="Action Update"
                                                 Command="{Binding #Root.((vm:TagViewModel)DataContext).ShowPopupToUpdateCommand}"
