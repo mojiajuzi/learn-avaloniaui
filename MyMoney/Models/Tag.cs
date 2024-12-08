@@ -12,8 +12,9 @@ public class Tag : BaseModel
     {
     }
 
-    public Tag(string name, bool status)
+    public Tag(int id, string name, bool status)
     {
+        Id = id;
         Name = name;
         Status = status;
         CreatedAt = DateTime.Now;
@@ -22,14 +23,12 @@ public class Tag : BaseModel
 
     public static List<Tag> GetGenerateData()
     {
-        return
-        [
-            new Tag(name: "First Project", status: true),
-            new Tag(name: "Second Projec", status: true),
-            new Tag(name: "Third Project", status: true),
-            new Tag(name: "F4", status: true),
-            new Tag(name: "F5", status: true),
-            new Tag(name: "F6", status: true)
-        ];
+        List<Tag> tags = new List<Tag>();
+        for (int i = 0; i < 10; i++)
+        {
+            tags.Add(new Tag(i + 1, "tag" + i, false));
+        }
+
+        return tags;
     }
 }

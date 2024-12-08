@@ -39,7 +39,7 @@ public partial class ContactViewModel : ViewModelBase
 
     private static List<Category> GenerateCategory()
     {
-        return Category.getGenareData().OrderBy(x => x.Name).ToList();
+        return Category.GetGenareData().OrderBy(x => x.Name).ToList();
     }
 
     private static List<Tag> GenerateTag()

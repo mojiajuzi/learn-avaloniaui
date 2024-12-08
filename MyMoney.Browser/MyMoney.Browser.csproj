@@ -8,8 +8,9 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Browser"/>
-        <PackageReference Include="Avalonia.Controls.DataGrid" />
-        <PackageReference Include="MessageBox.Avalonia" />
+        <PackageReference Include="Avalonia.Controls.DataGrid"/>
+        <PackageReference Include="MessageBox.Avalonia"/>
+        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome"/>
     </ItemGroup>
 
     <ItemGroup>

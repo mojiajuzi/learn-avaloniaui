@@ -5,99 +5,106 @@
              xmlns:vm="clr-namespace:MyMoney.ViewModels"
              xmlns:models="clr-namespace:MyMoney.Models"
              xmlns:converters="clr-namespace:MyMoney.Converters"
-             xmlns:avalonia="clr-namespace:System;assembly=System.ComponentModel.TypeConverter"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MyMoney.Views.ContactView"
              x:DataType="vm:ContactViewModel">
     <UserControl.Resources>
         <converters:PathToImageConverter x:Key="PathToImageConverter" />
     </UserControl.Resources>
-    <Border Padding="10,0">
+    <Border>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="8*"></RowDefinition>
                 <RowDefinition Height="84*"></RowDefinition>
                 <RowDefinition Height="8*"></RowDefinition>
             </Grid.RowDefinitions>
+
+            <!--表单弹框 -->
             <Grid Row="0">
-                <DockPanel>
-                    <Button DockPanel.Dock="Left" Content="Add" Click="ContactCreateClick"></Button>
-                    <Popup Name="ContactCreatePopup"
-                           IsOpen="False"
-                           PlacementMode="AnchorAndGravity"
-                           PlacementTarget="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                           WindowManagerAddShadowHint="False">
-                        <Border Width="500" Height="600" Background="White" BorderThickness="1" BorderBrush="Gray">
-                            <StackPanel Spacing="10" Margin="20">
-                                <Button x:Name="AvatarUploadButton"
-                                        Width="100" Height="100"
-                                        BorderThickness="0"
-                                        Background="Transparent"
-                                        Click="AvatarUploadButtonClick"
-                                        HorizontalAlignment="Center"
-                                        CornerRadius="50"
-                                        RenderOptions.BitmapInterpolationMode="HighQuality">
-                                    <Button.Content>
-                                        <Border CornerRadius="50"
-                                                Background="#EEEEEE">
-                                            <Image Name="AvatarImage"
-                                                   Source="{Binding Avatar, Mode=TwoWay}"
-                                                   Stretch="UniformToFill"
-                                                   Width="100"
-                                                   Height="100">
-                                            </Image>
-                                        </Border>
-                                    </Button.Content>
-                                </Button>
-                                <TextBox Name="Name" Text="{Binding ContactData.Name}" Watermark="input contact name"></TextBox>
-                                <TextBox Name="Email" Text="{Binding ContactData.Email}" Watermark="Email"></TextBox>
-                                <TextBox Name="Phone" Text="{Binding ContactData.Phone}" Watermark="Phone"></TextBox>
-                                <TextBox Name="Wechat" Text="{Binding ContactData.Wechat}" Watermark="Wechat"></TextBox>
-                                <TextBox Name="Qq" Text="{Binding ContactData.QQ}" Watermark="QQ"></TextBox>
-                                <TextBox Name="Remark" Text="{Binding ContactData.Remark}" Watermark="Remark"></TextBox>
-                                <StackPanel>
-                                    <TextBlock Text="please select category:"></TextBlock>
-                                    <ComboBox
-                                        ItemsSource="{Binding CategoryDataList}"
-                                        SelectedIndex="0"
-                                        Width="200"
-                                        SelectedItem="{Binding ContactData.Category}"
-                                        MaxDropDownHeight="200">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Name}"></TextBlock>
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="please select Tags:"></TextBlock>
-                                    <ListBox
-                                        ItemsSource="{Binding TagDataList}"
-                                        SelectedIndex="0"
-                                        SelectionMode="Multiple,Toggle"
-                                        SelectedItems="{Binding Tags}">
-                                        <ListBox.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel></WrapPanel>
-                                            </ItemsPanelTemplate>
-                                        </ListBox.ItemsPanel>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Name}"></TextBlock>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </StackPanel>
-                                <UniformGrid Rows="1" Columns="2">
-                                    <Button Click="ContactCancelClick" Content="Cancel"></Button>
-                                    <Button HorizontalAlignment="Right" Click="ContactSubmitClick" Content="Submit"></Button>
-                                </UniformGrid>
-                            </StackPanel>
-                        </Border>
-                    </Popup>
-                </DockPanel>
+                <Button
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Click="ContactCreateClick">
+                    <StackPanel Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
+                        <TextBlock Text="Add"></TextBlock>
+                    </StackPanel>
+                </Button>
             </Grid>
+            <Popup Name="ContactCreatePopup"
+                   IsOpen="False"
+                   Placement="AnchorAndGravity"
+                   PlacementTarget="{Binding $parent[UserControl]}">
+                <Border Classes="Popup">
+                    <StackPanel Classes="Popup">
+                        <Button x:Name="AvatarUploadButton"
+                                Width="100" Height="100"
+                                BorderThickness="0"
+                                Background="Transparent"
+                                Click="AvatarUploadButtonClick"
+                                HorizontalAlignment="Center"
+                                CornerRadius="50"
+                                RenderOptions.BitmapInterpolationMode="HighQuality">
+                            <Button.Content>
+                                <Border CornerRadius="50"
+                                        Background="#EEEEEE">
+                                    <Image Name="AvatarImage"
+                                           Source="{Binding Avatar, Mode=TwoWay}"
+                                           Stretch="UniformToFill"
+                                           Width="100"
+                                           Height="100">
+                                    </Image>
+                                </Border>
+                            </Button.Content>
+                        </Button>
+                        <TextBox Name="Name" Text="{Binding ContactData.Name}" Watermark="input contact name"></TextBox>
+                        <TextBox Name="Email" Text="{Binding ContactData.Email}" Watermark="Email"></TextBox>
+                        <TextBox Name="Phone" Text="{Binding ContactData.Phone}" Watermark="Phone"></TextBox>
+                        <TextBox Name="Wechat" Text="{Binding ContactData.Wechat}" Watermark="Wechat"></TextBox>
+                        <TextBox Name="Qq" Text="{Binding ContactData.QQ}" Watermark="QQ"></TextBox>
+                        <TextBox Name="Remark" Text="{Binding ContactData.Remark}" Watermark="Remark"></TextBox>
+                        <StackPanel>
+                            <TextBlock Text="please select category:"></TextBlock>
+                            <ComboBox
+                                ItemsSource="{Binding CategoryDataList}"
+                                SelectedIndex="0"
+                                Width="200"
+                                SelectedItem="{Binding ContactData.Category}"
+                                MaxDropDownHeight="200">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="please select Tags:"></TextBlock>
+                            <ListBox
+                                ItemsSource="{Binding TagDataList}"
+                                SelectedIndex="0"
+                                SelectionMode="Multiple,Toggle"
+                                SelectedItems="{Binding Tags}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel></WrapPanel>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                        <UniformGrid Rows="1" Columns="2">
+                            <Button Click="ContactCancelClick" Content="Cancel"></Button>
+                            <Button HorizontalAlignment="Right" Click="ContactSubmitClick" Content="Submit"></Button>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+            </Popup>
             <Grid Row="1">
                 <ItemsControl x:Name="Root" ItemsSource="{Binding Contacts}">
                     <ItemsControl.ItemsPanel>
@@ -107,18 +114,26 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.DataTemplates>
                         <DataTemplate DataType="{x:Type models:Contact}">
-                            <Border Width="300" Height="150" BorderThickness="1" BorderBrush="LightGray">
-                                <UniformGrid Rows="1" Columns="2">
-                                    <Border CornerRadius="50" Margin="0,10">
-                                        <Image Grid.Column="0" Width="80" Height="80"
-                                               Source="{Binding Avatar, Converter={StaticResource PathToImageConverter}}"
-                                               Stretch="UniformToFill">
+                            <Border Classes="Card">
+                                <StackPanel Orientation="Horizontal" Classes="Card">
+                                    <Border Classes="avatarContainer">
+                                        <Image Classes="avatar"
+                                               Source="{Binding Avatar, Converter={StaticResource PathToImageConverter}}">
                                         </Image>
                                     </Border>
-                                    <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="10">
-                                        <TextBlock Padding="0,5" Text="{Binding Name}"></TextBlock>
-                                        <TextBlock Text="{Binding Phone}"></TextBlock>
-                                        <TextBlock Text="{Binding Email}"></TextBlock>
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Classes="icon">
+                                            <i:Icon Value="fa-thin fa-user"></i:Icon>
+                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <i:Icon Value="fa-thin fa-phone"></i:Icon>
+                                            <TextBlock Text="{Binding Phone}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <i:Icon Value="fa-thin fa-envelope"></i:Icon>
+                                            <TextBlock Text="{Binding Email}"></TextBlock>
+                                        </StackPanel>
                                         <ItemsControl ItemsSource="{Binding Tags}" Padding="0,10">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -132,7 +147,7 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </StackPanel>
-                                </UniformGrid>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.DataTemplates>

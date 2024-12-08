@@ -33,8 +33,18 @@
         <Setter Property="Opacity" Value="0.8" />
     </Style>
 
+    <Style Selector="Button.Action">
+        <Setter Property="Margin" Value=" 5 5"></Setter>
+        <Setter Property="FontSize" Value="12"></Setter>
+    </Style>
+
     <Style Selector="Button.Delete">
         <Setter Property="Background" Value="{DynamicResource WarningBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}" />
+    </Style>
+
+    <Style Selector="Button.Update">
+        <Setter Property="Background" Value="{DynamicResource SuccessBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}" />
     </Style>
 
@@ -73,44 +83,36 @@
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
     </Style>
 
-    <Style Selector="PathIcon">
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-    </Style>
-
     <!-- 标签卡片样式 -->
-    <Style Selector="Border.TagCard">
+    <Style Selector="Border.Card">
         <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Margin" Value="8" />
-        <Setter Property="Width" Value="250" />
         <Setter Property="BoxShadow" Value="0 2 4 0 #20000000" />
-    </Style>
-
-    <Style Selector="Button.Link">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
-        <Setter Property="Padding" Value="4,2" />
-        <Setter Property="FontWeight" Value="Normal" />
-    </Style>
-
-    <Style Selector="Button.Link:pointerover">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Opacity" Value="0.8" />
-    </Style>
-
-    <Style Selector="Button.Link > TextBlock">
-        <Setter Property="TextDecorations" Value="{x:Null}" />
-    </Style>
-
-    <Style Selector="Button.Link:pointerover > TextBlock">
-        <Setter Property="TextDecorations">
-            <TextDecorationCollection>
-                <TextDecoration Location="Underline" />
-            </TextDecorationCollection>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
         </Setter>
+        <Setter Property="RenderTransform" Value="none"/>
     </Style>
+
+    <Style Selector="Border.Card:pointerover">
+        <Setter Property="BoxShadow" Value="0 4 8 0 #40000000"/>
+        <Setter Property="RenderTransform" Value="scale(1.02)"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style Selector="Border.Popup">
+        <Setter Property="Width" Value="400"></Setter>
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"></Setter>
+
+    </Style>
+
     <Style Selector="ToggleSwitch">
         <Setter Property="OnContent" Value="" />
         <Setter Property="OffContent" Value="" />
@@ -121,4 +123,85 @@
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
     </Style>
 
+    <Style Selector="PathIcon">
+        <Setter Property="Height" Value="15"></Setter>
+        <Setter Property="Width" Value="15"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"></Setter>
+    </Style>
+
+    <Style Selector="StackPanel.Popup">
+        <Setter Property="Spacing" Value="20"></Setter>
+        <Setter Property="Margin" Value="16"></Setter>
+    </Style>
+    <Style Selector="StackPanel.Card">
+        <Setter Property="Spacing" Value="20"></Setter>
+        <Setter Property="Margin" Value="16"></Setter>
+    </Style>
+
+    <Style Selector="StackPanel.icon">
+        <Setter Property="Orientation" Value="Horizontal"></Setter>
+        <Setter Property="Spacing" Value="8"></Setter>
+        <Setter Property="Margin" Value="4 4"></Setter>
+    </Style>
+
+    <Style Selector="NotificationCard">
+        <Setter Property="Width" Value="250" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+        <Setter Property="Margin" Value="0,4" />
+        <Style Selector="^:success /template/ Panel#PART_HeaderBar">
+            <Setter Property="Background" Value="{DynamicResource SuccessBrush}"></Setter>
+        </Style>
+        <Style Selector="^:warning /template/ Panel#PART_HeaderBar">
+            <Setter Property="Background" Value="{DynamicResource WarningBrush}"></Setter>
+        </Style>
+        <Style Selector="^:error /template/ Panel#PART_HeaderBar">
+            <Setter Property="Background" Value="{DynamicResource ErrorBrush}"></Setter>
+        </Style>
+        <Style Selector="^:information /template/ Panel#PART_HeaderBar">
+            <Setter Property="Background" Value="{DynamicResource InfoBrush}"></Setter>
+        </Style>
+    </Style>
+
+    <!--图像样式-->
+    <Style Selector="Image.avatar">
+        <Setter Property="Width" Value="80" />
+        <Setter Property="Height" Value="80" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Clip">
+            <EllipseGeometry Rect="0,0,80,80" />
+        </Setter>
+        <Setter Property="Stretch" Value="UniformToFill" />
+    </Style>
+
+    <Style Selector="Image.avatarSmall">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Clip">
+            <EllipseGeometry Rect="0,0,40,40" />
+        </Setter>
+        <Setter Property="Stretch" Value="UniformToFill" />
+    </Style>
+
+    <!-- 添加��边框的头像容器样式 -->
+    <Style Selector="Border.avatarContainer">
+        <Setter Property="Width" Value="80" />
+        <Setter Property="Height" Value="80" />
+        <Setter Property="CornerRadius" Value="60" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="BoxShadow" Value="0 2 4 0 #20000000" />
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+    </Style>
+
+    <Style Selector="Border.avatarSmallContainer">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="BoxShadow" Value="0 1 2 0 #20000000" />
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+    </Style>
 </Styles>

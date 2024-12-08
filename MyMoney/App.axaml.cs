@@ -6,11 +6,14 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using MyMoney.ViewModels;
 using MyMoney.Views;
+using Avalonia.Controls.Notifications;
 
 namespace MyMoney;
 
 public partial class App : Application
 {
+    public static INotificationManager? NotificationManager { get; set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

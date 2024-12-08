@@ -6,136 +6,145 @@
              xmlns:vm="clr-namespace:MyMoney.ViewModels"
              x:Class="MyMoney.Views.CategoryView"
              x:DataType="vm:CategoryViewModel"
-             xmlns:local="clr-namespace:MyMoney.Services"
              Background="{DynamicResource BackgroundBrush}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="8*" />
-            <RowDefinition Height="84*" />
-            <RowDefinition Height="8*" />
-        </Grid.RowDefinitions>
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*" />
+                <RowDefinition Height="84*" />
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
 
-        <!-- 顶部工具栏 -->
-        <Border Classes="Card" Margin="16,8">
-            <DockPanel>
-                <Button DockPanel.Dock="Left"
-                        Click="CreateCategoryClick">
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="4">
-                        <TextBlock Text="+"
-                                   FontWeight="Bold"
-                                   VerticalAlignment="Center" />
+            <!-- 顶部工具栏 -->
+            <Grid Row="0">
+                <Button
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding PopupToggleSwitchChangedCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
                         <TextBlock Text="Add" />
                     </StackPanel>
                 </Button>
-            </DockPanel>
-        </Border>
+            </Grid>
+            <!-- 创建分类弹窗 -->
+            <Popup
+                IsOpen="{Binding PopupOpen}"
+                Placement="Center"
+                PlacementTarget="{Binding $parent[UserControl]}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top">
+                <Border Classes="Popup">
+                    <StackPanel Classes="Popup">
+                        <TextBox Name="Name"
+                                 Text="{Binding Category.Name}"
+                                 Watermark="Category Name" />
 
-        <!-- 创建分类弹窗 -->
-        <Popup Name="CreateCategoryPopup"
-               IsOpen="False"
-               Placement="Center"
-               PlacementTarget="{Binding $parent[UserControl]}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Top">
-            <Border Classes="Card"
-                    Width="400"
-                    Background="{DynamicResource CardBackgroundBrush}">
-                <StackPanel Spacing="20" Margin="16">
-                    <TextBlock Text="Create New Category"
-                               HorizontalAlignment="Center" />
+                        <ToggleSwitch Name="Status"
+                                      IsChecked="{Binding Category.Status}"
+                                      OnContent="On"
+                                      OffContent="Off" />
 
-                    <TextBox Name="Name"
-                             Watermark="Category Name" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="16">
+                            <Button
+                                Classes="Cancel"
+                                Content="Cancel"
+                                Command="{Binding PopupToggleSwitchChangedCommand}" />
+                            <Button Content="Submit" Command="{Binding SubmitCategoryCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Popup>
 
-                    <ToggleSwitch Name="Status"
-                                  OnContent="Active"
-                                  OffContent="Inactive" />
+            <!-- 数据表格 -->
+            <Border Grid.Row="1">
+                <DataGrid x:Name="Root"
+                          ItemsSource="{Binding Categories, Mode=TwoWay}"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All"
+                          BorderThickness="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id"
+                                            Width="*"
+                                            Binding="{Binding Id}" />
+                        <DataGridTextColumn Header="Name"
+                                            Width="*"
+                                            Binding="{Binding Name}" />
+                        <DataGridTemplateColumn Header="Status" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ToggleSwitch Margin="8,0"
+                                                  IsChecked="{Binding Status}"
+                                                  Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ToggleSwitchChangedCommand}"
+                                                  CommandParameter="{Binding .}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Created At"
+                                            Width="*"
+                                            Binding="{Binding CreatedAt}" />
+                        <DataGridTextColumn Header="Updated At"
+                                            Width="*"
+                                            Binding="{Binding UpdatedAt}" />
+                        <DataGridTemplateColumn Header="Action" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <Button Classes="Action Update"
+                                                Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ShowPopupWithCategoryCommand}"
+                                                CommandParameter="{Binding .}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <PathIcon Data="{StaticResource EditRegular}"></PathIcon>
+                                                <TextBlock Text="Update"></TextBlock>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button Classes="Action Delete"
+                                                Command="{Binding #Root.((vm:CategoryViewModel)DataContext).DeleteCategoryCommand}"
+                                                CommandParameter="{Binding .}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <PathIcon Data="{StaticResource DeleteRegular}"></PathIcon>
+                                                <TextBlock Text="Delete"></TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                    </WrapPanel>
+
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- 分页控件 -->
+            <Border Grid.Row="2" Classes="Card" Margin="16,8">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="16">
+                    <Button Classes="IconButton"
+                            Command="{Binding GoToPreviousPageCommand}">
+                        <PathIcon Data="{StaticResource ChevronLeft}" />
+                    </Button>
 
                     <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Spacing="16">
-                        <Button
-                            Classes="Cancel"
-                            Content="Cancel"
-                            Click="CreateCategoryCancleClick" />
-                        <Button Content="Create"
-                                Click="CreateCategorySubmitClick" />
+                                VerticalAlignment="Center"
+                                Spacing="8">
+                        <TextBlock Text="{Binding CurrentPage}"
+                                   Classes="h2" />
+                        <TextBlock Text="/"
+                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
+                        <TextBlock Text="{Binding TotalPages}"
+                                   Classes="h2" />
                     </StackPanel>
+
+                    <Button Classes="IconButton"
+                            Command="{Binding GoToNextPageCommand}">
+                        <PathIcon Data="{StaticResource ChevronRight}" />
+                    </Button>
                 </StackPanel>
             </Border>
-        </Popup>
-
-        <!-- 数据表格 -->
-        <Border Grid.Row="1" Classes="Card" Margin="16,8">
-            <DataGrid x:Name="Root"
-                      ItemsSource="{Binding Categories}"
-                      IsReadOnly="True"
-                      GridLinesVisibility="All"
-                      BorderThickness="1">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id"
-                                        Width="*"
-                                        Binding="{Binding Id}" />
-                    <DataGridTextColumn Header="Name"
-                                        Width="*"
-                                        Binding="{Binding Name}" />
-                    <DataGridTemplateColumn Header="Status" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ToggleSwitch Margin="8,0"
-                                              IsChecked="{Binding Status, Converter={local:EnumToBoolConverter}, ConverterParameter=Active}"
-                                              Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ToggleSwitchChangedCommand}"
-                                              CommandParameter="{Binding .}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Created At"
-                                        Width="*"
-                                        Binding="{Binding CreatedAt}" />
-                    <DataGridTextColumn Header="Updated At"
-                                        Width="*"
-                                        Binding="{Binding UpdatedAt}" />
-                    <DataGridTemplateColumn Header="Action" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Classes="Delete"
-                                        Content="Delete"
-                                        Command="{Binding #Root.((vm:CategoryViewModel)DataContext).DeleteCategoryCommand}"
-                                        CommandParameter="{Binding .}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
-
-        <!-- 分页控件 -->
-        <Border Grid.Row="2" Classes="Card" Margin="16,8">
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        Spacing="16">
-                <Button Classes="IconButton"
-                        Command="{Binding GoToPreviousPageCommand}">
-                    <PathIcon Data="{StaticResource ChevronLeft}" />
-                </Button>
-
-                <StackPanel Orientation="Horizontal"
-                            VerticalAlignment="Center"
-                            Spacing="8">
-                    <TextBlock Text="{Binding CurrentPage}"
-                               Classes="h2" />
-                    <TextBlock Text="/"
-                               Foreground="{DynamicResource ForegroundSecondaryBrush}" />
-                    <TextBlock Text="{Binding TotalPages}"
-                               Classes="h2" />
-                </StackPanel>
-
-                <Button Classes="IconButton"
-                        Command="{Binding GoToNextPageCommand}">
-                    <PathIcon Data="{StaticResource ChevronRight}" />
-                </Button>
-            </StackPanel>
-        </Border>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>

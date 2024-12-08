@@ -19,8 +19,9 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia.Android"/>
-        <PackageReference Include="Avalonia.Controls.DataGrid" />
-        <PackageReference Include="MessageBox.Avalonia" />
+        <PackageReference Include="Avalonia.Controls.DataGrid"/>
+        <PackageReference Include="MessageBox.Avalonia"/>
+        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome"/>
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen"/>
     </ItemGroup>
 

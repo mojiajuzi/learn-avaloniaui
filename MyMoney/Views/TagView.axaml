@@ -7,102 +7,111 @@
              x:Class="MyMoney.Views.TagView"
              x:DataType="vm:TagViewModel"
              Background="{DynamicResource BackgroundBrush}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="8*" />
-            <RowDefinition Height="84*" />
-            <RowDefinition Height="8*" />
-        </Grid.RowDefinitions>
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*" />
+                <RowDefinition Height="84*" />
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
+            <!-- 顶部工具栏 -->
+            <Button
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Command="{Binding PopupToggleSwitchChangedCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
+                    <TextBlock Text="Add" />
+                </StackPanel>
+            </Button>
+            <!-- 创建分类弹窗 -->
+            <Popup
+                Placement="Center"
+                PlacementTarget="{Binding $parent[UserControl]}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                IsOpen="{Binding PopupOpen}">
+                <Border Classes="Popup">
+                    <StackPanel Classes="Popup">
+                        <TextBox Name="Name"
+                                 Watermark="Tag Name"
+                                 Text="{Binding TagData.Name}" />
 
-        <!-- 顶部工具栏 -->
-        <Border Classes="Card" Margin="16,8">
-            <DockPanel Height="80">
-                <Button DockPanel.Dock="Left"
-                        Classes="IconButton"
-                        Click="CreateTagClick">
-                    <PathIcon Data="{StaticResource Plus}" />
-                </Button>
+                        <ToggleSwitch Name="Status"
+                                      OnContent="On"
+                                      OffContent="Off"
+                                      IsChecked="{Binding TagData.Status}" />
 
-                <Popup Name="TagCreatePopup" IsOpen="False">
-                    <Border Classes="Card" Width="300">
-                        <StackPanel Spacing="20" Margin="16">
-                            <TextBlock Text="Create New Tag"
-                                       Classes="h1"
-                                       HorizontalAlignment="Center" />
-
-                            <TextBox Name="Name"
-                                     Classes="Search"
-                                     Watermark="Tag Name"
-                                     Text="{Binding TagData.Name}" />
-
-                            <ToggleSwitch Name="Status"
-                                          OnContent="Active"
-                                          OffContent="Inactive"
-                                          IsChecked="{Binding TagData.Status}" />
-
-                            <StackPanel Orientation="Horizontal"
-                                        HorizontalAlignment="Center"
-                                        Spacing="16">
-                                <Button Classes="Link"
-                                        Content="Cancel"
-                                        Click="TagCancelClick" />
-                                <Button Content="Submit"
-                                        Click="TagSubmitClick" />
-                            </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="16">
+                            <Button Classes="Cancel"
+                                    Content="Cancel"
+                                    Command="{Binding PopupToggleSwitchChangedCommand}" />
+                            <Button Content="Submit"
+                                    Command="{Binding TagSubmitClickCommand}" />
                         </StackPanel>
-                    </Border>
-                </Popup>
-            </DockPanel>
-        </Border>
+                    </StackPanel>
+                </Border>
+            </Popup>
 
-        <!-- 标签列表 -->
-        <Border Grid.Row="1" Classes="Card" Margin="16,8">
-            <ItemsControl x:Name="Root" ItemsSource="{Binding Tags}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Classes="TagCard">
-                            <StackPanel Spacing="16" Margin="8">
-                                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
-                                    <TextBlock Grid.Row="0" Grid.Column="0"
-                                               Text="Name:"
-                                               Foreground="{DynamicResource ForegroundSecondaryBrush}"
-                                               Margin="0,0,8,0" />
-                                    <TextBlock Grid.Row="0" Grid.Column="1"
-                                               Text="{Binding Name}" />
+            <!-- 标签列表 -->
+            <Border Grid.Row="1">
+                <ItemsControl x:Name="Root" ItemsSource="{Binding Tags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Classes="Card">
+                                <StackPanel Classes="Card">
+                                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
+                                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                                   Text="Name:"
+                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                                   Text="{Binding Name}" />
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0"
-                                               Text="Status:"
-                                               Foreground="{DynamicResource ForegroundSecondaryBrush}"
-                                               Margin="0,0,8,0" />
-                                    <ToggleSwitch Grid.Row="1" Grid.Column="1"
-                                                  IsChecked="{Binding Status}" />
+                                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                                   Text="Status:"
+                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
+                                        <ToggleSwitch Grid.Row="1" Grid.Column="1"
+                                                      IsChecked="{Binding Status}" />
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0"
-                                               Text="Updated:"
-                                               Foreground="{DynamicResource ForegroundSecondaryBrush}"
-                                               Margin="0,0,8,0" />
-                                    <TextBlock Grid.Row="2" Grid.Column="1"
-                                               Text="{Binding UpdatedAt, StringFormat={}{0:yyyy-MM-dd}}" />
-                                </Grid>
+                                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                                   Text="Updated:"
+                                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
+                                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                                   Text="{Binding UpdatedAt, StringFormat={}{0:yyyy-MM-dd}}" />
+                                    </Grid>
 
-                                <Button Classes="Link"
-                                        Content="Delete"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Center"
-                                        Command="{Binding #Root.((vm:TagViewModel)DataContext).RemoveTagItemCommand}"
-                                        CommandParameter="{Binding .}" />
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Border>
-
-        <Grid Row="2" />
-    </Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Classes="Action Update"
+                                                Command="{Binding #Root.((vm:TagViewModel)DataContext).ShowPopupToUpdateCommand}"
+                                                CommandParameter="{Binding .}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <PathIcon Data="{StaticResource EditRegular}"></PathIcon>
+                                                <TextBlock Text="Update"></TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Classes="Action Delete"
+                                                Command="{Binding #Root.((vm:TagViewModel)DataContext).RemoveTagItemCommand}"
+                                                CommandParameter="{Binding .}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <PathIcon Data="{StaticResource DeleteRegular}"></PathIcon>
+                                                <TextBlock Text="Delete"></TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+            <Grid Row="2" />
+        </Grid>
+    </Border>
 </UserControl>

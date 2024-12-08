@@ -8,7 +8,7 @@
         <entry key="MyMoney/Assets/GitHubStyles.axaml" value="MyMoney.Browser/MyMoney.Browser.csproj" />
         <entry key="MyMoney/Assets/Icons.axaml" value="MyMoney.Browser/MyMoney.Browser.csproj" />
         <entry key="MyMoney/Assets/Nord.axaml" value="MyMoney.Browser/MyMoney.Browser.csproj" />
-        <entry key="MyMoney/Assets/NordStyles.axaml" value="MyMoney.Browser/MyMoney.Browser.csproj" />
+        <entry key="MyMoney/Assets/NordStyles.axaml" value="MyMoney.Desktop/MyMoney.Desktop.csproj" />
         <entry key="MyMoney/Assets/Themes.axaml" value="MyMoney.Browser/MyMoney.Browser.csproj" />
         <entry key="MyMoney/Views/CategoryCreateView.axaml" value="MyMoney.Browser/MyMoney.Browser.csproj" />
         <entry key="MyMoney/Views/CategoryView.axaml" value="MyMoney.Desktop/MyMoney.Desktop.csproj" />

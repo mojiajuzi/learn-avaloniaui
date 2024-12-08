@@ -10,32 +10,26 @@ public class Category : BaseModel
     {
     }
 
-    public Category(int id, string name,DateTime date,CategoryStatus? status)
+    public Category(int id, string name, DateTime date, bool status)
     {
         Id = id;
         Name = name;
         CreatedAt = date;
         UpdatedAt = date;
-        Status = (CategoryStatus)status!;
+        Status = status;
     }
 
     public string Name { get; set; }
-    public CategoryStatus Status { get; set; }
+    public bool Status { get; set; }
 
-    public static List<Category> getGenareData()
+    public static List<Category> GetGenareData()
     {
         var categories = new List<Category>();
-        for (var i = 0; i < 30; i++)
+        for (var i = 0; i < 10; i++)
         {
-            categories.Add(new Category(i+1,$"test{i}",DateTime.Now,CategoryStatus.Active));
+            categories.Add(new Category(i + 1, $"test{i}", DateTime.Now, true));
         }
 
         return categories;
     }
-}
-
-public enum CategoryStatus
-{
-    Inactive,
-    Active
 }
