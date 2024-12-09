@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MyMoney.Models;
+
 
 namespace MyMoney.ViewModels;
 
@@ -16,17 +13,14 @@ public partial class MainViewModel : ViewModelBase
 
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
     {
-        new ListItemTemplate(typeof(CategoryViewModel), "Category", "TagIcon"),
-        new ListItemTemplate(typeof(TagViewModel), "Tags", "AppsListIcon"),
-        new ListItemTemplate(typeof(ContactViewModel), "Contacts", "AppsListIcon"),
-        new ListItemTemplate(typeof(WorkViewModel), "Works", "CalendarWorkWeekRegular")
+        new ListItemTemplate(typeof(CategoryViewModel), "Category", "fa-thin fa-list"),
+        new ListItemTemplate(typeof(TagViewModel), "Tags", "fa-thin fa-tag"),
+        new ListItemTemplate(typeof(ContactViewModel), "Contacts", "fa-thin fa-address-book"),
+        new ListItemTemplate(typeof(WorkViewModel), "Works", "fa-thin fa-calendar-days")
     };
 
     [ObservableProperty] private ListItemTemplate _selectedItem;
 
-    public MainViewModel()
-    {
-    }
 
     [RelayCommand]
     private void TriggerPan()
@@ -49,12 +43,11 @@ public class ListItemTemplate
     {
         ViewModelType = viewModelType;
         ViewModelName = viewModelName;
-        Application.Current!.TryFindResource(iconKey, out var icon);
-        Icon = (StreamGeometry)icon!;
+        Icon = iconKey;
     }
 
     public Type ViewModelType { get; set; }
     public string ViewModelName { get; set; }
 
-    public StreamGeometry Icon { get; set; }
+    public string Icon { get; set; }
 }

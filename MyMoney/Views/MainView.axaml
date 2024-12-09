@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:MyMoney.ViewModels"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              xmlns:views="clr-namespace:MyMoney.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MyMoney.Views.MainView"
@@ -12,10 +13,10 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <SplitView IsPaneOpen="True"
+    <SplitView IsPaneOpen="{Binding IsPanOpen}"
                DisplayMode="CompactInline"
                OpenPaneLength="200"
-               CompactPaneLength="48">
+               CompactPaneLength="46">
         <SplitView.Pane>
             <Grid RowDefinitions="Auto,*,Auto"
                   Background="{DynamicResource CardBackgroundBrush}">
@@ -31,8 +32,8 @@
                              Margin="4,0">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
-                                <StackPanel Spacing="15" Orientation="Horizontal">
-                                    <PathIcon Data="{Binding Icon}" />
+                                <StackPanel Spacing="8" Margin="0,4" Orientation="Horizontal">
+                                    <i:Icon Value="{Binding Icon}" />
                                     <TextBlock Text="{Binding ViewModelName}" />
                                 </StackPanel>
                             </DataTemplate>
