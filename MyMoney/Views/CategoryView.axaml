@@ -2,8 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:MyMoney.ViewModels"
+             xmlns:model="clr-namespace:MyMoney.Models"
              x:Class="MyMoney.Views.CategoryView"
              x:DataType="vm:CategoryViewModel"
              Background="{DynamicResource BackgroundBrush}">
@@ -22,7 +24,7 @@
                     VerticalAlignment="Top"
                     Command="{Binding PopupToggleSwitchChangedCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
+                        <i:Icon Value="fa-thin fa-plus"></i:Icon>
                         <TextBlock Text="Add" />
                     </StackPanel>
                 </Button>
@@ -59,92 +61,66 @@
             </Popup>
 
             <!-- 数据表格 -->
-            <Border Grid.Row="1">
-                <DataGrid x:Name="Root"
-                          ItemsSource="{Binding Categories, Mode=TwoWay}"
-                          IsReadOnly="True"
-                          GridLinesVisibility="All"
-                          BorderThickness="1">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id"
-                                            Width="*"
-                                            Binding="{Binding Id}" />
-                        <DataGridTextColumn Header="Name"
-                                            Width="*"
-                                            Binding="{Binding Name}" />
-                        <DataGridTemplateColumn Header="Status" Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ToggleSwitch Margin="8,0"
-                                                  IsChecked="{Binding Status}"
-                                                  Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ToggleSwitchChangedCommand}"
-                                                  CommandParameter="{Binding .}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Created At"
-                                            Width="*"
-                                            Binding="{Binding CreatedAt}" />
-                        <DataGridTextColumn Header="Updated At"
-                                            Width="*"
-                                            Binding="{Binding UpdatedAt}" />
-                        <DataGridTemplateColumn Header="Action" Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <WrapPanel Orientation="Horizontal">
+            <Grid Row="1" Name="Root">
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate DataType="{x:Type model:Category}">
+                            <Border Classes="Card">
+                                <StackPanel Classes="Card">
+                                    <!-- 名称和状态 -->
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Name" Classes="label"></TextBlock>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Status" Classes="label"></TextBlock>
+                                            <ToggleSwitch IsChecked="{Binding Status}"
+                                                          Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ToggleSwitchChangedCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Created At" Classes="label" />
+                                            <TextBlock
+                                                Text="{Binding CreatedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="Updated At" Classes="label" />
+                                            <TextBlock
+                                                Text="{Binding UpdatedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}"
+                                                Foreground="{DynamicResource PrimaryBrush}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <!-- 操作按钮 -->
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
                                         <Button Classes="Action Update"
                                                 Command="{Binding #Root.((vm:CategoryViewModel)DataContext).ShowPopupWithCategoryCommand}"
                                                 CommandParameter="{Binding .}">
                                             <StackPanel Orientation="Horizontal">
-                                                <PathIcon Data="{StaticResource EditRegular}"></PathIcon>
-                                                <TextBlock Text="Update"></TextBlock>
+                                                <i:Icon Value="fa-thin fa-edit"></i:Icon>
+                                                <TextBlock Text="Edit" />
                                             </StackPanel>
                                         </Button>
-
                                         <Button Classes="Action Delete"
                                                 Command="{Binding #Root.((vm:CategoryViewModel)DataContext).DeleteCategoryCommand}"
                                                 CommandParameter="{Binding .}">
                                             <StackPanel Orientation="Horizontal">
-                                                <PathIcon Data="{StaticResource DeleteRegular}"></PathIcon>
-                                                <TextBlock Text="Delete"></TextBlock>
+                                                <i:Icon Value="fa-thin fa-trash"></i:Icon>
+                                                <TextBlock Text="Delete" />
                                             </StackPanel>
                                         </Button>
-                                    </WrapPanel>
-
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Border>
-
-            <!-- 分页控件 -->
-            <Border Grid.Row="2" Classes="Card" Margin="16,8">
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            Spacing="16">
-                    <Button Classes="IconButton"
-                            Command="{Binding GoToPreviousPageCommand}">
-                        <PathIcon Data="{StaticResource ChevronLeft}" />
-                    </Button>
-
-                    <StackPanel Orientation="Horizontal"
-                                VerticalAlignment="Center"
-                                Spacing="8">
-                        <TextBlock Text="{Binding CurrentPage}"
-                                   Classes="h2" />
-                        <TextBlock Text="/"
-                                   Foreground="{DynamicResource ForegroundSecondaryBrush}" />
-                        <TextBlock Text="{Binding TotalPages}"
-                                   Classes="h2" />
-                    </StackPanel>
-
-                    <Button Classes="IconButton"
-                            Command="{Binding GoToNextPageCommand}">
-                        <PathIcon Data="{StaticResource ChevronRight}" />
-                    </Button>
-                </StackPanel>
-            </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.DataTemplates>
+                </ItemsControl>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

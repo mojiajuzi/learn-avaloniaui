@@ -30,6 +30,29 @@ public class Work : BaseModel
         TotalMoney = totalMoney;
         Status = WorkStatus.PreStart;
     }
+
+    public static List<Work> GenerateData()
+    {
+        List<Work> works = new List<Work>();
+        for (int i = 0; i < 10; i++)
+        {
+            works.Add(new Work()
+            {
+                Name = $"Work {i}",
+                Description = $"Description {i}",
+                StartAt = DateTime.Today.AddDays(i),
+                EndAt = DateTime.Today.AddDays(i + 1),
+                ExceptionAt = DateTime.Today.AddDays(i + 1),
+                CostMoney = 100 * i,
+                TotalMoney = 1000 * i,
+                Status = WorkStatus.PreStart,
+                ReceivingPayment = 100 * i,
+                Contacts = Contact.GenerateContacts()
+            });
+        }
+
+        return works;
+    }
 }
 
 public enum WorkStatus

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:MyMoney.ViewModels"
              xmlns:model="clr-namespace:MyMoney.Models"
@@ -18,30 +19,41 @@
                 <Button
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Click="WorkCreateClick">
+                    Command="{Binding PopupOpenToggleCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
+                        <i:Icon Value="fa-thin fa-plus"></i:Icon>
                         <TextBlock Text="Add"></TextBlock>
                     </StackPanel>
                 </Button>
             </Grid>
             <Popup Name="WorkCreatePopup"
-                   IsOpen="False"
+                   IsOpen="{Binding PopupOpen}"
                    Placement="AnchorAndGravity"
                    PlacementTarget="{Binding $parent[UserControl]}">
                 <Border Classes="Popup">
                     <StackPanel Spacing="10" HorizontalAlignment="Center" Margin="10">
+                        <TextBlock Text="WorkName"></TextBlock>
                         <TextBox Name="Name" Watermark="input work name" Text="{Binding WorkData.Name}"></TextBox>
+                        <TextBlock Text="WorkDescription"></TextBlock>
                         <TextBox Name="Description"
                                  Watermark="input description:use the enter change line"
                                  Text="{Binding WorkData.Description}"
                                  AcceptsReturn="True"
                                  TextWrapping="Wrap">
                         </TextBox>
+                        <TextBlock Text="WorkMoney"></TextBlock>
                         <TextBox Name="TotalMoney"
                                  Text="{Binding WorkData.TotalMoney}"
                                  Watermark="please input Total Money">
                         </TextBox>
+                        <StackPanel>
+                            <TextBlock Text="Start Date"></TextBlock>
+                            <DatePicker SelectedDate="{Binding SelectedStartAt}" DayFormat="ddd dd"></DatePicker>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="End Date"></TextBlock>
+                            <DatePicker DayFormat="ddd dd" SelectedDate="{Binding SelectedEndAt}"></DatePicker>
+                        </StackPanel>
                         <StackPanel Spacing="8">
                             <Grid>
                                 <TextBox Classes="Search"
@@ -52,7 +64,7 @@
                                          LostFocus="SearchBox_OnLostFocus" />
                                 <Popup Name="ContactSearchPopup"
                                        IsOpen="False"
-                                       PlacementMode="Bottom"
+                                       Placement="Bottom"
                                        PlacementTarget="{Binding #SearchBox}"
                                        WindowManagerAddShadowHint="False">
                                     <Border Background="White"
@@ -71,9 +83,7 @@
                                                 <DataTemplate DataType="{x:Type model:Contact}">
                                                     <Border Margin="2">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <PathIcon Data="{StaticResource Person}"
-                                                                      Width="16"
-                                                                      Height="16" />
+                                                            <i:Icon Value="fa-thin fa-user" />
                                                             <TextBlock Text="{Binding Name}" />
                                                         </StackPanel>
                                                     </Border>
@@ -83,11 +93,10 @@
                                     </Border>
                                 </Popup>
                             </Grid>
-                            <Border Classes="Card" MinHeight="50">
+                            <Border MinHeight="50">
                                 <StackPanel>
                                     <TextBlock Text="Selected Contacts:"
-                                               Margin="0,0,0,8"
-                                               Foreground="{DynamicResource ForegroundSecondaryBrush}" />
+                                               Foreground="{DynamicResource SecondaryBrush}" />
                                     <ItemsControl ItemsSource="{Binding SelectedContacts}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -96,14 +105,11 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate DataType="{x:Type model:Contact}">
-                                                <Border Classes="TagCard"
-                                                        Margin="2"
-                                                        Padding="8,4">
+                                                <Border Background="{DynamicResource PrimaryBrush}" Margin="4">
                                                     <StackPanel Orientation="Horizontal"
+                                                                Margin="2"
                                                                 Spacing="8">
-                                                        <PathIcon Data="{StaticResource Person}"
-                                                                  Width="12"
-                                                                  Height="12" />
+                                                        <i:Icon Value="fa-thin fa-user" />
                                                         <TextBlock Text="{Binding Name}"
                                                                    VerticalAlignment="Center" />
                                                         <Button Classes="IconButton"
@@ -111,7 +117,7 @@
                                                                 Padding="2"
                                                                 Command="{Binding #Root.((vm:WorkViewModel)DataContext).RemoveSelectedContactCommand}"
                                                                 CommandParameter="{Binding}">
-                                                            <PathIcon Data="{StaticResource Close}" />
+                                                            <i:Icon Value="fa-thin fa-xmark"></i:Icon>
                                                         </Button>
                                                     </StackPanel>
                                                 </Border>
@@ -122,8 +128,15 @@
                             </Border>
                         </StackPanel>
                         <UniformGrid Rows="1" Columns="2">
-                            <Button Click="WorkCancelClick" Content="Cancel"></Button>
-                            <Button HorizontalAlignment="Right" Click="WorkSubmitClick" Content="Submit"></Button>
+                            <Button
+                                Classes="Cancel"
+                                Command="{Binding PopupOpenToggleCommand}"
+                                Content="Cancel" />
+                            <Button
+                                Classes="Update"
+                                HorizontalAlignment="Right"
+                                Command="{Binding SubmitCommand}"
+                                Content="Submit" />
                         </UniformGrid>
                     </StackPanel>
                 </Border>
@@ -132,22 +145,64 @@
                 <ItemsControl ItemsSource="{Binding Works}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel />
+                            <WrapPanel Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.DataTemplates>
                         <DataTemplate x:DataType="{x:Type model:Work}">
-                            <Border HorizontalAlignment="Center" Padding="10">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBox Text="{Binding Id}"></TextBox>
-                                    <TextBox Text="{Binding Name}"></TextBox>
-                                    <TextBox Text="{Binding Status}"></TextBox>
-                                    <TextBox Text="{Binding TotalMoney}"></TextBox>
-                                    <TextBox Text="{Binding ReceivingPayment}"></TextBox>
-                                    <TextBox Text="{Binding StartAt}"></TextBox>
-                                    <TextBox Text="{Binding EndAt}"></TextBox>
-                                    <TextBox Text="{Binding ExceptionAt}"></TextBox>
-                                    <TextBox Text="{Binding CostMoney}"></TextBox>
+                            <Border Classes="Card">
+                                <StackPanel Classes="Card" Orientation="Vertical" Spacing="8">
+                                    <StackPanel Orientation="Horizontal" Spacing="16">
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Text="{Binding Status}" Classes="label" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="16">
+                                        <StackPanel Classes="icon" Orientation="Vertical">
+                                            <TextBlock Text="{Binding TotalMoney}" />
+                                            <TextBlock Text="Total" Classes="label" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon" Orientation="Vertical">
+                                            <TextBlock Text="{Binding ReceivingPayment}" />
+                                            <TextBlock Text="Received" Classes="label" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon" Orientation="Vertical">
+                                            <TextBlock Text="{Binding CostMoney}" />
+                                            <TextBlock Text="Cost" Classes="label" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Vertical" Spacing="4">
+                                        <StackPanel Classes="icon">
+                                            <i:Icon Value="fa-thin fa-calendar-days" />
+                                            <TextBlock Text="Start" Classes="label" />
+                                            <TextBlock Text="{Binding StartAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <i:Icon Value="fa-thin fa-calendar-check" />
+                                            <TextBlock Text="End" Classes="label" />
+                                            <TextBlock Text="{Binding EndAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Classes="Action Update">
+                                            <StackPanel Orientation="Horizontal">
+                                                <i:Icon Value="fa-thin fa-edit"></i:Icon>
+                                                <TextBlock Text="Edit" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Classes="Action Delete">
+                                            <StackPanel Orientation="Horizontal">
+                                                <i:Icon Value="fa-thin fa-trash"></i:Icon>
+                                                <TextBlock Text="Delete" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

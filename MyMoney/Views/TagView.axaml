@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:MyMoney.ViewModels"
              x:Class="MyMoney.Views.TagView"
@@ -20,7 +21,7 @@
                 VerticalAlignment="Top"
                 Command="{Binding PopupToggleSwitchChangedCommand}">
                 <StackPanel Orientation="Horizontal">
-                    <PathIcon Data="{StaticResource AddRegular}"></PathIcon>
+                    <i:Icon Value="fa-thin fa-plus"></i:Icon>
                     <TextBlock Text="Add" />
                 </StackPanel>
             </Button>
@@ -69,15 +70,15 @@
                                 <StackPanel Classes="Card">
                                     <StackPanel>
                                         <StackPanel Classes="icon">
-                                            <TextBlock Text="Name"></TextBlock>
+                                            <TextBlock Classes="label" Text="Name" />
                                             <TextBlock Text="{Binding Name}"></TextBlock>
                                         </StackPanel>
                                         <StackPanel Classes="icon">
-                                            <TextBlock Text="Status"></TextBlock>
+                                            <TextBlock Classes="label" Text="Status" />
                                             <ToggleSwitch IsChecked="{Binding Status}"></ToggleSwitch>
                                         </StackPanel>
                                         <StackPanel Classes="icon">
-                                            <TextBlock Text="Update"></TextBlock>
+                                            <TextBlock Classes="label" Text="Update" />
                                             <TextBlock Text="{Binding UpdatedAt, StringFormat={}{0:yyyy-MM-dd}}"></TextBlock>
                                         </StackPanel>
                                     </StackPanel>
@@ -86,15 +87,15 @@
                                                 Command="{Binding #Root.((vm:TagViewModel)DataContext).ShowPopupToUpdateCommand}"
                                                 CommandParameter="{Binding .}">
                                             <StackPanel Orientation="Horizontal">
-                                                <PathIcon Data="{StaticResource EditRegular}"></PathIcon>
-                                                <TextBlock Text="Update"></TextBlock>
+                                                <i:Icon Value="fa-thin fa-edit"></i:Icon>
+                                                <TextBlock Text="Edit"></TextBlock>
                                             </StackPanel>
                                         </Button>
                                         <Button Classes="Action Delete"
                                                 Command="{Binding #Root.((vm:TagViewModel)DataContext).RemoveTagItemCommand}"
                                                 CommandParameter="{Binding .}">
                                             <StackPanel Orientation="Horizontal">
-                                                <PathIcon Data="{StaticResource DeleteRegular}"></PathIcon>
+                                                <i:Icon Value="fa-thin fa-trash"></i:Icon>
                                                 <TextBlock Text="Delete"></TextBlock>
                                             </StackPanel>
                                         </Button>

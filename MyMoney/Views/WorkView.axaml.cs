@@ -18,25 +18,6 @@ public partial class WorkView : UserControl
         InitializeComponent();
     }
 
-    private void WorkCreateClick(object? sender, RoutedEventArgs e)
-    {
-        WorkCreatePopup.IsOpen = true;
-    }
-
-    private void WorkCancelClick(object? sender, RoutedEventArgs e)
-    {
-        WorkCreatePopup.IsOpen = false;
-    }
-
-    private async void WorkSubmitClick(object? sender, RoutedEventArgs e)
-    {
-        WorkCreatePopup.IsOpen = false;
-        var vm = DataContext as WorkViewModel;
-        vm?.AddWork();
-        var message = MessageBoxManager.GetMessageBoxStandard("Notify", "Work submitted successfully.");
-        await message.ShowAsync();
-    }
-
     private void SearchBox_OnGotFocus(object? sender, GotFocusEventArgs e)
     {
         ContactSearchPopup.IsOpen = true;
