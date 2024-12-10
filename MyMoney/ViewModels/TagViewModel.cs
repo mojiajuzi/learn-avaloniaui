@@ -76,7 +76,7 @@ public partial class TagViewModel : ViewModelBase
 
     private static List<Tag> GenerateList()
     {
-        return Tag.GetGenerateData();
+        return [];
     }
 
     [RelayCommand]

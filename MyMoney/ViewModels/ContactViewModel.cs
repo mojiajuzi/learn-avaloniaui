@@ -46,7 +46,7 @@ public partial class ContactViewModel : ViewModelBase
 
     private static List<Tag> GenerateTag()
     {
-        return Tag.GetGenerateData().OrderBy(x => x.Name).ToList();
+        return [];
     }
 
     [RelayCommand]

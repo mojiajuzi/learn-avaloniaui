@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MyMoney.DatabaseService;
 
 
 namespace MyMoney.ViewModels;
@@ -10,6 +11,13 @@ public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _isPanOpen = true;
     [ObservableProperty] private ViewModelBase _currentPage = new CategoryViewModel();
+
+    private readonly DbContextFactory _dbContextFactory;
+
+    public MainViewModel(DbContextFactory dbContextFactory)
+    {
+        _dbContextFactory = dbContextFactory;
+    }
 
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
     {

@@ -39,8 +39,8 @@
                                  Text="{Binding TagData.Name}" />
 
                         <ToggleSwitch Name="Status"
-                                      OnContent="On"
-                                      OffContent="Off"
+                                      OnContent="Active"
+                                      OffContent="InActive"
                                       IsChecked="{Binding TagData.Status}" />
 
                         <StackPanel Orientation="Horizontal"

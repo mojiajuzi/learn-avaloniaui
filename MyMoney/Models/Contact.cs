@@ -48,7 +48,6 @@ public class Contact : BaseModel
                 Email = "johndoe@gmail.com",
                 Phone = "088888888",
                 Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                Tags = Tag.GetGenerateData().Slice(0, 2).ToList(),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 Category = Models.Category.GetGenareData().First()
@@ -60,7 +59,6 @@ public class Contact : BaseModel
                 Email = "johndoe@gmail.com",
                 Phone = "088888888",
                 Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                Tags = Tag.GetGenerateData().Slice(0, 2).ToList(),
                 Category = Models.Category.GetGenareData().First()
             },
             new Contact()
@@ -70,7 +68,6 @@ public class Contact : BaseModel
                 Email = "johndoe@gmail.com",
                 Phone = "088888888",
                 Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                Tags = Tag.GetGenerateData().Slice(0, 2).ToList(),
                 Category = Models.Category.GetGenareData().First()
             },
         };
