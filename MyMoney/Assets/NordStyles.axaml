@@ -115,8 +115,11 @@
 
     <Style Selector="Border.Popup">
         <Setter Property="Width" Value="400"></Setter>
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"></Setter>
-        <Setter Property="BoxShadow" Value="0 2 4 0 #20000000" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BoxShadow" Value="0 4 12 0 #40000000" />
     </Style>
 
     <Style Selector="ToggleSwitch">
@@ -246,5 +249,31 @@
     <Style Selector="ListBox.tagSelector ListBoxItem:pointerover Border.tag">
         <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
         <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <!-- DataGrid样式 -->
+    <Style Selector="DataGrid">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="RowBackground" Value="Transparent" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="VerticalGridLinesBrush" Value="Transparent" />
+    </Style>
+
+    <Style Selector="DataGridRow">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0,4" />
+    </Style>
+
+    <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SecondaryBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="8,8" />
     </Style>
 </Styles>

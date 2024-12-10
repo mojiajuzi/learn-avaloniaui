@@ -13,6 +13,8 @@ public class Work : BaseModel
     public DateTime ExceptionAt { get; set; } //实际结束时间
 
     public IEnumerable<Contact>? Contacts { get; set; } //相关人员
+
+    public IEnumerable<Expense>? Expenses { get; set; }
     public double TotalMoney { get; set; } //总款项
     public double ReceivingPayment { get; set; } //已收到款项
 
