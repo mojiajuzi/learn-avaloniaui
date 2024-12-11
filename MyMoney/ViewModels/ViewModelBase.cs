@@ -7,16 +7,16 @@ namespace MyMoney.ViewModels;
 
 public abstract class ViewModelBase : ObservableObject, IDisposable
 {
-    protected readonly AppDbContext AppDbContext;
+    protected readonly AppDbContext MyDbContext;
 
     protected ViewModelBase(AppDbContext appDbContext)
     {
-        AppDbContext = appDbContext;
+        MyDbContext = appDbContext;
     }
 
     protected ViewModelBase()
     {
-        AppDbContext = new AppDbContext();
+        MyDbContext = new AppDbContext();
     }
 
     protected void ShowNotification(string title, string message, NotificationType type)
@@ -33,6 +33,6 @@ public abstract class ViewModelBase : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        AppDbContext.Dispose();
+        MyDbContext.Dispose();
     }
 }

@@ -18,6 +18,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Category> Categories { get; set; } = null!;
 
+    public DbSet<Contact> Contacts { get; set; } = null!;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -55,10 +57,10 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
             entity.HasOne(e => e.Category)
-                  .WithMany()
-                  .HasForeignKey(e => e.CategoryId)
-                  .IsRequired(false)
-                  .OnDelete(DeleteBehavior.ClientSetNull);
+                .WithMany()
+                .HasForeignKey(e => e.CategoryId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
     }
 

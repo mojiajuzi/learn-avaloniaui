@@ -23,7 +23,7 @@ public partial class TagViewModel : ViewModelBase
 
     [ObservableProperty] private bool _popupOpen;
 
-    public TagViewModel(AppDbContext dbContext) : base(dbContext)
+    public TagViewModel(AppDbContext myDbContext) : base(myDbContext)
     {
         Tags = new ObservableCollection<Tag>(GetTags());
     }
@@ -32,7 +32,7 @@ public partial class TagViewModel : ViewModelBase
     {
         try
         {
-            return AppDbContext.Tags.AsNoTracking().ToList();
+            return MyDbContext.Tags.AsNoTracking().ToList();
         }
         catch (Exception ex)
         {
@@ -71,7 +71,7 @@ public partial class TagViewModel : ViewModelBase
 
         try
         {
-            var existingTag = AppDbContext.Tags
+            var existingTag = MyDbContext.Tags
                 .AsNoTracking()
                 .FirstOrDefault(t => t.Name.ToLower() == TagData.Name.ToLower()
                                      && t.Id != TagData.Id);
@@ -88,16 +88,16 @@ public partial class TagViewModel : ViewModelBase
                 var p = Tags.IndexOf(Tags.FirstOrDefault(x => x.Id == TagData.Id));
                 if (p != -1)
                 {
-                    AppDbContext.Tags.Update(TagData);
-                    AppDbContext.SaveChanges();
+                    MyDbContext.Tags.Update(TagData);
+                    MyDbContext.SaveChanges();
                     Tags.RemoveAt(p);
                     Tags.Insert(p, TagData);
                 }
             }
             else
             {
-                AppDbContext.Tags.Add(TagData);
-                AppDbContext.SaveChanges();
+                MyDbContext.Tags.Add(TagData);
+                MyDbContext.SaveChanges();
                 Tags.Add(TagData);
             }
 
@@ -129,13 +129,13 @@ public partial class TagViewModel : ViewModelBase
     {
         try
         {
-            AppDbContext.ChangeTracker.Clear();
+            MyDbContext.ChangeTracker.Clear();
             Tag item = Tags.FirstOrDefault(c => c.Id == tag.Id);
             if (item == null) return;
 
-            AppDbContext.Tags.Attach(item);
-            AppDbContext.Entry(item).State = EntityState.Modified;
-            AppDbContext.SaveChanges();
+            MyDbContext.Tags.Attach(item);
+            MyDbContext.Entry(item).State = EntityState.Modified;
+            MyDbContext.SaveChanges();
         }
         catch (Exception e)
         {
@@ -149,8 +149,8 @@ public partial class TagViewModel : ViewModelBase
         try
         {
             Tags.Remove(tag);
-            AppDbContext.Tags.Remove(tag);
-            AppDbContext.SaveChanges();
+            MyDbContext.Tags.Remove(tag);
+            MyDbContext.SaveChanges();
             ShowNotification("成功", "标签删除成功", NotificationType.Success);
         }
         catch (DbUpdateException ex)

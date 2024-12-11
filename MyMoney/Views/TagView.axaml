@@ -34,14 +34,17 @@
                 IsOpen="{Binding PopupOpen}">
                 <Border Classes="Popup">
                     <StackPanel Classes="Popup">
+                        <Label Content="Name"></Label>
                         <TextBox Name="Name"
                                  Watermark="Tag Name"
                                  Text="{Binding TagData.Name}" />
 
+                        <Label Content="Status"></Label>
                         <ToggleSwitch Name="Status"
                                       OnContent="Active"
                                       OffContent="InActive"
                                       IsChecked="{Binding TagData.Status}" />
+                        <Label Content="Description"></Label>
                         <TextBox Name="Description" Watermark="Description" Text="{Binding TagData.Description}" />
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"

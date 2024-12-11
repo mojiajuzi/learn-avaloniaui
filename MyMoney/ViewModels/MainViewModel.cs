@@ -17,7 +17,7 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(DbContextFactory dbContextFactory) : base(dbContextFactory.CreateDbContext())
     {
         _dbContextFactory = dbContextFactory;
-        CurrentPage = new CategoryViewModel(AppDbContext);
+        CurrentPage = new CategoryViewModel(MyDbContext);
     }
 
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
@@ -40,7 +40,7 @@ public partial class MainViewModel : ViewModelBase
     partial void OnSelectedItemChanged(ListItemTemplate? value)
     {
         if (value is null) return;
-        var instance = Activator.CreateInstance(value.ViewModelType, AppDbContext);
+        var instance = Activator.CreateInstance(value.ViewModelType, MyDbContext);
         if (instance is null) return;
         CurrentPage = (ViewModelBase)instance;
     }

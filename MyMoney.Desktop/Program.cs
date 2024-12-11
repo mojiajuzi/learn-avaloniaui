@@ -22,6 +22,9 @@ sealed class Program
 
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .With(new Win32PlatformOptions { OverlayPopups = true })
+            .With(new X11PlatformOptions { OverlayPopups = true })
+            .With(new AvaloniaNativePlatformOptions { OverlayPopups = true })
             .WithInterFont()
             .LogToTrace();
     }

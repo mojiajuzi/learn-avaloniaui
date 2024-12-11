@@ -11,6 +11,8 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
+using MyMoney.DatabaseService;
 using MyMoney.Models;
 using MyMoney.Services;
 
@@ -18,35 +20,44 @@ namespace MyMoney.ViewModels;
 
 public partial class ContactViewModel : ViewModelBase
 {
+    [ObservableProperty] private bool _hasError;
+    [ObservableProperty] private string? _errorMessage;
     public ObservableCollection<Contact> Contacts { get; set; }
 
-    [ObservableProperty] private Contact _contactData;
+    [ObservableProperty] private Contact? _contactData;
 
-    [ObservableProperty] private List<Category> _categoryDataList = GenerateCategory();
+    [ObservableProperty] private List<Category>? _categoryDataList = [];
 
-    [ObservableProperty] private List<Tag> _tagDataList = GenerateTag();
+    [ObservableProperty] private List<Tag>? _tagDataList = [];
 
     [ObservableProperty] private Bitmap? _avatar;
 
     [ObservableProperty] private bool _popupOpen;
 
-    [ObservableProperty] private List<Tag> _selectedTags;
+    [ObservableProperty] private List<Tag>? _selectedTags;
 
     [ObservableProperty] private Category? _selectedCategory;
 
-    public ContactViewModel()
+    public ContactViewModel(AppDbContext dbContext) : base(dbContext)
     {
-        Contacts = new ObservableCollection<Contact>([]);
+        Contacts = new ObservableCollection<Contact>(GetContacts());
+        CategoryDataList = GetCategories();
+        TagDataList = GetTags();
     }
 
-    private static List<Category> GenerateCategory()
+    private List<Contact> GetContacts()
     {
-        return [];
+        return MyDbContext.Contacts.AsNoTracking().ToList();
     }
 
-    private static List<Tag> GenerateTag()
+    private List<Category> GetCategories()
     {
-        return [];
+        return MyDbContext.Categories.AsNoTracking().Where(c => c.Status == true).ToList();
+    }
+
+    private List<Tag> GetTags()
+    {
+        return MyDbContext.Tags.AsNoTracking().Where(t => t.Status == true).ToList();
     }
 
     [RelayCommand]

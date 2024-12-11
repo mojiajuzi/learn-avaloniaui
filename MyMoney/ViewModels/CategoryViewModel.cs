@@ -24,7 +24,7 @@ public partial class CategoryViewModel : ViewModelBase
 
     [ObservableProperty] private Category _category;
 
-    public CategoryViewModel(AppDbContext dbContext) : base(dbContext)
+    public CategoryViewModel(AppDbContext myDbContext) : base(myDbContext)
     {
         Categories = new ObservableCollection<Category>(GetCategories());
         Category = new Category();
@@ -32,7 +32,7 @@ public partial class CategoryViewModel : ViewModelBase
 
     private List<Category> GetCategories()
     {
-        return AppDbContext.Categories.AsNoTracking().ToList();
+        return MyDbContext.Categories.AsNoTracking().ToList();
     }
 
 
@@ -41,15 +41,15 @@ public partial class CategoryViewModel : ViewModelBase
     {
         try
         {
-            AppDbContext.ChangeTracker.Clear();
+            MyDbContext.ChangeTracker.Clear();
 
             Category item = Categories.FirstOrDefault(c => c.Id == category.Id);
 
             if (item == null) return;
 
-            AppDbContext.Categories.Attach(item);
-            AppDbContext.Entry(item).State = EntityState.Modified;
-            AppDbContext.SaveChanges();
+            MyDbContext.Categories.Attach(item);
+            MyDbContext.Entry(item).State = EntityState.Modified;
+            MyDbContext.SaveChanges();
         }
         catch (Exception e)
         {
@@ -95,7 +95,7 @@ public partial class CategoryViewModel : ViewModelBase
         try
         {
             //check name unique
-            var exiting = AppDbContext.Categories.AsNoTracking()
+            var exiting = MyDbContext.Categories.AsNoTracking()
                 .FirstOrDefault(c => c.Name == Category.Name && c.Id != Category.Id);
             if (exiting != null)
             {
@@ -109,16 +109,16 @@ public partial class CategoryViewModel : ViewModelBase
                 var index = Categories.IndexOf(Categories.FirstOrDefault(x => x.Id == Category.Id));
                 if (index != -1)
                 {
-                    AppDbContext.Categories.Update(Category);
-                    await AppDbContext.SaveChangesAsync();
+                    MyDbContext.Categories.Update(Category);
+                    await MyDbContext.SaveChangesAsync();
                     Categories.RemoveAt(index);
                     Categories.Insert(index, Category);
                 }
             }
             else
             {
-                AppDbContext.Categories.Add(Category);
-                await AppDbContext.SaveChangesAsync();
+                MyDbContext.Categories.Add(Category);
+                await MyDbContext.SaveChangesAsync();
                 Categories.Add(Category);
             }
 
@@ -137,8 +137,8 @@ public partial class CategoryViewModel : ViewModelBase
     {
         try
         {
-            AppDbContext.Categories.Remove(category);
-            AppDbContext.SaveChanges();
+            MyDbContext.Categories.Remove(category);
+            MyDbContext.SaveChanges();
             Categories.Remove(category);
             ShowNotification("Success", "Category deleted", NotificationType.Success);
         }

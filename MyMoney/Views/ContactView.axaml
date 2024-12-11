@@ -20,7 +20,7 @@
                 <RowDefinition Height="8*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <!--�� -->
+            <!--����� -->
             <Grid Row="0">
                 <Button
                     HorizontalAlignment="Left"
@@ -34,10 +34,16 @@
             </Grid>
             <Popup Name="ContactCreatePopup"
                    IsOpen="{Binding PopupOpen}"
-                   Placement="AnchorAndGravity"
-                   PlacementTarget="{Binding $parent[UserControl]}">
+                   Placement="Center"
+                   PlacementTarget="{Binding $parent[UserControl]}"
+                   ZIndex="1000"
+                   WindowManagerAddShadowHint="False">
                 <Border Classes="Popup">
                     <StackPanel Classes="Popup">
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   IsVisible="{Binding HasError}"
+                                   Classes="ShowError" />
+
                         <Button x:Name="AvatarUploadButton"
                                 Width="100" Height="100"
                                 BorderThickness="0"
@@ -48,47 +54,76 @@
                                 RenderOptions.BitmapInterpolationMode="HighQuality">
                             <Button.Content>
                                 <Border Classes="avatarContainer">
-                                    <Image
-                                        Classes="avatar"
-                                        Name="AvatarImage"
-                                        Source="{Binding Avatar, Mode=TwoWay}">
-                                    </Image>
+                                    <Image Classes="avatar"
+                                           Name="AvatarImage"
+                                           Source="{Binding Avatar, Mode=TwoWay}" />
                                 </Border>
                             </Button.Content>
                         </Button>
-                        <TextBox Name="Name" Text="{Binding ContactData.Name}" Watermark="input contact name"></TextBox>
-                        <TextBox Name="Email" Text="{Binding ContactData.Email}" Watermark="Email"></TextBox>
-                        <TextBox Name="Phone" Text="{Binding ContactData.Phone}" Watermark="Phone"></TextBox>
-                        <TextBox Name="Wechat" Text="{Binding ContactData.Wechat}" Watermark="Wechat"></TextBox>
-                        <TextBox Name="Qq" Text="{Binding ContactData.QQ}" Watermark="QQ"></TextBox>
-                        <TextBox Name="Remark" Text="{Binding ContactData.Remark}" Watermark="Remark"></TextBox>
+
                         <StackPanel>
-                            <TextBlock Text="please select category:"></TextBlock>
-                            <ComboBox
-                                ItemsSource="{Binding CategoryDataList}"
-                                Width="200"
-                                AutoScrollToSelectedItem="True"
-                                SelectedItem="{Binding ContactData.Category}"
-                                MaxDropDownHeight="200">
+                            <Label Content="Name" Target="Name" />
+                            <TextBox Name="Name"
+                                     Text="{Binding ContactData.Name}"
+                                     Watermark="Enter contact name" />
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*,16,*">
+                            <StackPanel Grid.Column="0">
+                                <Label Content="Email" Target="Email" />
+                                <TextBox Name="Email"
+                                         Text="{Binding ContactData.Email}"
+                                         Watermark="Enter email address" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <Label Content="Phone" Target="Phone" />
+                                <TextBox Name="Phone"
+                                         Text="{Binding ContactData.Phone}"
+                                         Watermark="Enter phone number" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,16,*">
+                            <StackPanel Grid.Column="0">
+                                <Label Content="WeChat" Target="Wechat" />
+                                <TextBox Name="Wechat"
+                                         Text="{Binding ContactData.Wechat}"
+                                         Watermark="Enter WeChat ID" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <Label Content="QQ" Target="Qq" />
+                                <TextBox Name="Qq"
+                                         Text="{Binding ContactData.QQ}"
+                                         Watermark="Enter QQ number" />
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel>
+                            <Label Content="Category" Target="CategoryComboBox" />
+                            <ComboBox Name="CategoryComboBox"
+                                      ItemsSource="{Binding CategoryDataList}"
+                                      Width="200"
+                                      AutoScrollToSelectedItem="True"
+                                      SelectedItem="{Binding ContactData.Category}"
+                                      MaxDropDownHeight="200">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <Panel>
-                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                            <TextBlock Text="{Binding Name}" />
                                         </Panel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="please select Tags:"></TextBlock>
-                            <ListBox
-                                Classes="tagSelector"
-                                ItemsSource="{Binding TagDataList}"
-                                SelectionMode="Multiple,Toggle"
-                                SelectedItems="{Binding SelectedTags, Mode=TwoWay}">
+                            <Label Content="Tags" Target="TagsListBox" />
+                            <ListBox Name="TagsListBox"
+                                     Classes="tagSelector"
+                                     ItemsSource="{Binding TagDataList}"
+                                     SelectionMode="Multiple,Toggle"
+                                     SelectedItems="{Binding SelectedTags, Mode=TwoWay}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel></WrapPanel>
+                                        <WrapPanel />
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemTemplate>
@@ -100,18 +135,23 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </StackPanel>
-                        <UniformGrid Rows="1" Columns="2">
-                            <Button
-                                Classes="Cancel"
-                                Command="{Binding PopupOpenToggleCommand}"
-                                Content="Cancel">
-                            </Button>
-                            <Button
-                                Classes="Update"
-                                HorizontalAlignment="Right"
-                                Command="{Binding SubmitCommandCommand}"
-                                Content="Submit">
-                            </Button>
+                        <StackPanel>
+                            <Label Content="Remark" Target="Remark" />
+                            <TextBox Name="Remark"
+                                     Text="{Binding ContactData.Remark}"
+                                     Watermark="Enter remark"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Height="60" />
+                        </StackPanel>
+                        <UniformGrid Rows="1" Columns="2" Margin="0,16,0,0">
+                            <Button Classes="Cancel"
+                                    Command="{Binding PopupOpenToggleCommand}"
+                                    Content="Cancel" />
+                            <Button Classes="Update"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding SubmitCommandCommand}"
+                                    Content="Submit" />
                         </UniformGrid>
                     </StackPanel>
                 </Border>

@@ -144,7 +144,7 @@
     </Style>
 
     <Style Selector="StackPanel.Popup">
-        <Setter Property="Spacing" Value="20"></Setter>
+        <Setter Property="Spacing" Value="8"></Setter>
         <Setter Property="Margin" Value="16"></Setter>
     </Style>
     <Style Selector="StackPanel.Card">
@@ -280,5 +280,10 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="8,8" />
+    </Style>
+
+    <Style Selector="Label">
+        <Setter Property="Margin" Value="0"></Setter>
+        <Setter Property="Padding" Value="0"></Setter>
     </Style>
 </Styles>
