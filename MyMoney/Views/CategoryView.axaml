@@ -40,9 +40,6 @@
                     <StackPanel Classes="Popup">
                         <TextBlock Classes="ShowError"
                                    IsVisible="{Binding HasError}"
-                                   Foreground="{DynamicResource ErrorBrush}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,10"
                                    Text="{Binding ErrorMessage}" />
                         <Label Content="Name"></Label>
                         <TextBox Name="Name"

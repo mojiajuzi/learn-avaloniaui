@@ -127,6 +127,55 @@ namespace MyMoney.Migrations
                     b.ToTable("contact_tags", (string)null);
                 });
 
+            modelBuilder.Entity("MyMoney.Models.Expense", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("InCome")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WorkId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("WorkId");
+
+                    b.ToTable("expenses");
+                });
+
             modelBuilder.Entity("MyMoney.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -162,6 +211,99 @@ namespace MyMoney.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("MyMoney.Models.Work", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("CostMoney")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EndAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ExceptionAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("ReceivingPayment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("StartAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
+
+                    b.Property<decimal>("TotalMoney")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("works");
+                });
+
+            modelBuilder.Entity("WorkContact", b =>
+                {
+                    b.Property<int>("WorkId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("Other");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("WorkId", "ContactId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("WorkContacts");
+                });
+
             modelBuilder.Entity("MyMoney.Models.Contact", b =>
                 {
                     b.HasOne("MyMoney.Models.Category", "Category")
@@ -190,6 +332,43 @@ namespace MyMoney.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("MyMoney.Models.Expense", b =>
+                {
+                    b.HasOne("MyMoney.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MyMoney.Models.Work", "Work")
+                        .WithMany("Expenses")
+                        .HasForeignKey("WorkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Work");
+                });
+
+            modelBuilder.Entity("WorkContact", b =>
+                {
+                    b.HasOne("MyMoney.Models.Contact", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyMoney.Models.Work", "Work")
+                        .WithMany("WorkContacts")
+                        .HasForeignKey("WorkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Work");
+                });
+
             modelBuilder.Entity("MyMoney.Models.Contact", b =>
                 {
                     b.Navigation("ContactTags");
@@ -198,6 +377,13 @@ namespace MyMoney.Migrations
             modelBuilder.Entity("MyMoney.Models.Tag", b =>
                 {
                     b.Navigation("ContactTags");
+                });
+
+            modelBuilder.Entity("MyMoney.Models.Work", b =>
+                {
+                    b.Navigation("Expenses");
+
+                    b.Navigation("WorkContacts");
                 });
 #pragma warning restore 612, 618
         }

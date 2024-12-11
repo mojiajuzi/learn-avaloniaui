@@ -182,6 +182,9 @@
                        PlacementTarget="{Binding $parent[UserControl]}">
                     <Border Classes="Popup">
                         <StackPanel Spacing="10" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock Classes="ShowError"
+                                       IsVisible="{Binding HasError}"
+                                       Text="{Binding ErrorMessage}" />
                             <TextBlock Text="WorkName"></TextBlock>
                             <TextBox Name="Name" Watermark="input work name" Text="{Binding WorkData.Name}"></TextBox>
                             <TextBlock Text="WorkDescription"></TextBlock>
@@ -198,84 +201,15 @@
                             </TextBox>
                             <StackPanel>
                                 <TextBlock Text="Start Date"></TextBlock>
-                                <DatePicker SelectedDate="{Binding SelectedStartAt}" DayFormat="ddd dd"></DatePicker>
+                                <DatePicker DayFormat="dd" MonthFormat="MM" YearFormat="yyyy"
+                                            SelectedDate="{Binding SelectedStartAt}">
+                                </DatePicker>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="End Date"></TextBlock>
-                                <DatePicker DayFormat="ddd dd" SelectedDate="{Binding SelectedEndAt}"></DatePicker>
-                            </StackPanel>
-                            <StackPanel Spacing="8">
-                                <Grid>
-                                    <TextBox Classes="Search"
-                                             Name="SearchBox"
-                                             Watermark="Search contacts..."
-                                             Text="{Binding SearchText}"
-                                             GotFocus="SearchBox_OnGotFocus"
-                                             LostFocus="SearchBox_OnLostFocus" />
-                                    <Popup Name="ContactSearchPopup"
-                                           IsOpen="False"
-                                           Placement="Bottom"
-                                           PlacementTarget="{Binding #SearchBox}"
-                                           WindowManagerAddShadowHint="False">
-                                        <Border Background="White"
-                                                Width="{Binding #SearchBox.Bounds.Width}"
-                                                MinHeight="50"
-                                                MaxHeight="200">
-                                            <ListBox ItemsSource="{Binding FilteredContacts}"
-                                                     SelectedItems="{Binding SelectedContacts}"
-                                                     SelectionMode="Multiple,Toggle">
-                                                <ListBox.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel />
-                                                    </ItemsPanelTemplate>
-                                                </ListBox.ItemsPanel>
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate DataType="{x:Type model:Contact}">
-                                                        <Border Margin="2">
-                                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                                <i:Icon Value="fa-thin fa-user" />
-                                                                <TextBlock Text="{Binding Name}" />
-                                                            </StackPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>
-                                        </Border>
-                                    </Popup>
-                                </Grid>
-                                <Border MinHeight="50">
-                                    <StackPanel>
-                                        <TextBlock Text="Selected Contacts:"
-                                                   Foreground="{DynamicResource SecondaryBrush}" />
-                                        <ItemsControl ItemsSource="{Binding SelectedContacts}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type model:Contact}">
-                                                    <Border Background="{DynamicResource PrimaryBrush}" Margin="4">
-                                                        <StackPanel Orientation="Horizontal"
-                                                                    Margin="2"
-                                                                    Spacing="8">
-                                                            <i:Icon Value="fa-thin fa-user" />
-                                                            <TextBlock Text="{Binding Name}"
-                                                                       VerticalAlignment="Center" />
-                                                            <Button Classes="IconButton"
-                                                                    Width="16" Height="16"
-                                                                    Padding="2"
-                                                                    Command="{Binding #Root.((vm:WorkViewModel)DataContext).RemoveSelectedContactCommand}"
-                                                                    CommandParameter="{Binding}">
-                                                                <i:Icon Value="fa-thin fa-xmark"></i:Icon>
-                                                            </Button>
-                                                        </StackPanel>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                </Border>
+                                <DatePicker DayFormat="dd" MonthFormat="MM" YearFormat="yyyy"
+                                            SelectedDate="{Binding SelectedEndAt}">
+                                </DatePicker>
                             </StackPanel>
                             <UniformGrid Rows="1" Columns="2">
                                 <Button
@@ -330,15 +264,36 @@
                                         </StackPanel>
 
                                         <StackPanel Orientation="Vertical" Spacing="4">
-                                            <StackPanel Classes="icon">
-                                                <i:Icon Value="fa-thin fa-calendar-days" />
-                                                <TextBlock Text="Start" Classes="label" />
-                                                <TextBlock Text="{Binding StartAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel Classes="icon">
+                                                    <i:Icon Value="fa-thin fa-calendar-days" />
+                                                    <TextBlock Text="Start" Classes="label" />
+                                                    <TextBlock
+                                                        Text="{Binding StartAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <Button Classes="Action Info">
+                                                        <StackPanel Classes="icon" Orientation="Horizontal">
+                                                            <i:Icon Value="fa-thin fa-user"></i:Icon>
+                                                            <TextBlock Text="Contact"></TextBlock>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </StackPanel>
                                             </StackPanel>
-                                            <StackPanel Classes="icon">
-                                                <i:Icon Value="fa-thin fa-calendar-check" />
-                                                <TextBlock Text="End" Classes="label" />
-                                                <TextBlock Text="{Binding EndAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel Classes="icon">
+                                                    <i:Icon Value="fa-thin fa-calendar-check" />
+                                                    <TextBlock Text="End" Classes="label" />
+                                                    <TextBlock Text="{Binding EndAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <Button Classes="Action">
+                                                        <StackPanel Orientation="Horizontal" Classes="icon">
+                                                            <i:Icon Value="fa-thin fa-ticket"></i:Icon>
+                                                            <TextBlock Text="Expenes"></TextBlock>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
 

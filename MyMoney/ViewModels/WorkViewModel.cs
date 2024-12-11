@@ -5,6 +5,8 @@ using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MyMoney.Models;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
+using MyMoney.DatabaseService;
 
 namespace MyMoney.ViewModels;
 
@@ -36,16 +38,21 @@ public partial class WorkViewModel : ViewModelBase
     [ObservableProperty] private Category? _selectedCategory;
     [ObservableProperty] private List<Category> _categories = [];
 
-    public WorkViewModel()
+    public WorkViewModel(AppDbContext dbContext) : base(dbContext)
     {
-        Works = new ObservableCollection<Work>(Work.GenerateData());
+        GetWorks();
         WorkData = new Work();
-        SelectedContacts = new ObservableCollection<Contact>();
-        FilteredContacts = new ObservableCollection<Contact>(ContactData);
-        SelectedStartAt = DateTimeOffset.Now;
-        SelectedEndAt = DateTimeOffset.Now;
         ExpenseData = new Expense();
         SelectedExpenseDate = DateTimeOffset.Now;
+    }
+
+    private void GetWorks()
+    {
+        var list = MyDbContext.Works.AsNoTracking().ToList();
+        if (list.Count != 0)
+        {
+            Works = new ObservableCollection<Work>(list);
+        }
     }
 
     partial void OnSearchTextChanged(string value)
@@ -56,7 +63,21 @@ public partial class WorkViewModel : ViewModelBase
     [RelayCommand]
     private void PopupOpenToggle()
     {
+        if (!PopupOpen)
+        {
+            SelectedContacts = [];
+            GetContacts();
+            FilteredContacts = new ObservableCollection<Contact>(ContactData);
+            SelectedStartAt = DateTimeOffset.Now;
+            SelectedEndAt = DateTimeOffset.Now;
+        }
+
         PopupOpen = !PopupOpen;
+    }
+
+    private void GetContacts()
+    {
+        ContactData = MyDbContext.Contacts.AsNoTracking().ToList();
     }
 
     private void FilterContacts()
@@ -91,7 +112,19 @@ public partial class WorkViewModel : ViewModelBase
     [RelayCommand]
     private void Submit()
     {
-        Works.Add(WorkData);
+        if (!WorkData.Validate(out var result))
+        {
+            HasError = true;
+            ErrorMessage = string.Join(Environment.NewLine, result.Select(r => r.ErrorMessage));
+            return;
+        }
+
+        if (WorkData != null)
+        {
+            MyDbContext.Works.Add(WorkData);
+            MyDbContext.SaveChanges();
+        }
+
         WorkData = new Work();
         PopupOpen = false;
     }
