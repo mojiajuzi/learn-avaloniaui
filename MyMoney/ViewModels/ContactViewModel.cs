@@ -1,20 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.Selection;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using MyMoney.DatabaseService;
 using MyMoney.Models;
-using MyMoney.Services;
 
 namespace MyMoney.ViewModels;
 
@@ -34,9 +27,9 @@ public partial class ContactViewModel : ViewModelBase
 
     [ObservableProperty] private bool _popupOpen;
 
-    [ObservableProperty] private List<Tag>? _selectedTags;
+    [ObservableProperty] private List<Tag>? _selectedTags = [];
 
-    [ObservableProperty] private Category? _selectedCategory;
+    [ObservableProperty] private Category? _selectedCategory = null;
 
     public ContactViewModel(AppDbContext dbContext) : base(dbContext)
     {
@@ -47,7 +40,12 @@ public partial class ContactViewModel : ViewModelBase
 
     private List<Contact> GetContacts()
     {
-        return MyDbContext.Contacts.AsNoTracking().ToList();
+        return MyDbContext.Contacts
+            .Include(c => c.Category)
+            .Include(c => c.ContactTags)
+            .ThenInclude(ct => ct.Tag)
+            .AsNoTracking()
+            .ToList();
     }
 
     private List<Category> GetCategories()
@@ -79,21 +77,114 @@ public partial class ContactViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SubmitCommand()
+    private void SubmitContact()
     {
-        PopupOpen = false;
-        if (ContactData.Id > 0)
+        if (!ContactData.Validate(out var results))
         {
-            var index = Contacts.IndexOf(Contacts.FirstOrDefault(x => x.Id == ContactData.Id));
-            Contacts.RemoveAt(index);
-            Contacts.Insert(index, ContactData);
-        }
-        else
-        {
-            Contacts.Add(ContactData);
+            HasError = true;
+            ErrorMessage = string.Join(Environment.NewLine, results.Select(r => r.ErrorMessage));
+            return;
         }
 
-        ContactData = null;
+        try
+        {
+            MyDbContext.ChangeTracker.Clear();
+            
+            using var transaction = MyDbContext.Database.BeginTransaction();
+
+            try 
+            {
+                if (ContactData.Id > 0)
+                {
+                    // 更新现有联系人
+                    var existingContact = MyDbContext.Contacts
+                        .Include(c => c.ContactTags)
+                        .First(c => c.Id == ContactData.Id);
+
+                    // 更新基本信息
+                    existingContact.Name = ContactData.Name;
+                    existingContact.Email = ContactData.Email;
+                    existingContact.Phone = ContactData.Phone;
+                    existingContact.Wechat = ContactData.Wechat;
+                    existingContact.QQ = ContactData.QQ;
+                    existingContact.Remark = ContactData.Remark;
+                    existingContact.Avatar = ContactData.Avatar;
+                    existingContact.UpdatedAt = DateTime.Now;
+                    existingContact.CategoryId = SelectedCategory?.Id;
+
+                    MyDbContext.Contacts.Update(existingContact);
+                    MyDbContext.SaveChanges();
+
+                    // 更新标签关系
+                    var existingTags = MyDbContext.ContactTags
+                        .Where(ct => ct.ContactId == existingContact.Id);
+                    MyDbContext.ContactTags.RemoveRange(existingTags);
+                    MyDbContext.SaveChanges();
+
+                    if (SelectedTags.Any())
+                    {
+                        var contactTags = SelectedTags.Select(tag => new ContactTag
+                        {
+                            ContactId = existingContact.Id,
+                            TagId = tag.Id
+                        });
+                        MyDbContext.ContactTags.AddRange(contactTags);
+                        MyDbContext.SaveChanges();
+                    }
+                }
+                else
+                {
+                    // 创建新联系人
+                    var newContact = new Contact
+                    {
+                        Name = ContactData.Name,
+                        Email = ContactData.Email,
+                        Phone = ContactData.Phone,
+                        Wechat = ContactData.Wechat,
+                        QQ = ContactData.QQ,
+                        Remark = ContactData.Remark,
+                        Avatar = ContactData.Avatar,
+                        CategoryId = SelectedCategory?.Id,
+                        Status = true,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now
+                    };
+
+                    MyDbContext.Contacts.Add(newContact);
+                    MyDbContext.SaveChanges();
+
+                    if (SelectedTags.Any())
+                    {
+                        var contactTags = SelectedTags.Select(tag => new ContactTag
+                        {
+                            ContactId = newContact.Id,
+                            TagId = tag.Id
+                        });
+                        MyDbContext.ContactTags.AddRange(contactTags);
+                        MyDbContext.SaveChanges();
+                    }
+                }
+
+                transaction.Commit();
+
+                // 使用新的刷新方法
+                RefreshContacts();
+                ContactData = new Contact();
+                SelectedCategory = null;
+                SelectedTags = [];
+                PopupOpen = false;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            HasError = true;
+        }
     }
 
     [RelayCommand]
@@ -103,7 +194,8 @@ public partial class ContactViewModel : ViewModelBase
 
         SelectedCategory = CategoryDataList.FirstOrDefault(c => c.Id == contact.Category?.Id);
 
-        var selectedTags = TagDataList.Where(t => contact.Tags?.Any(ct => ct.Id == t.Id) ?? false).ToList();
+        var selectedTags = TagDataList.Where(t =>
+            contact.ContactTags.Any(ct => ct.TagId == t.Id)).ToList();
         SelectedTags = new List<Tag>(selectedTags);
 
         ContactData = new Contact
@@ -129,7 +221,24 @@ public partial class ContactViewModel : ViewModelBase
     [RelayCommand]
     private void RemoveContact(Contact contact)
     {
-        Contacts.Remove(contact);
+        try
+        {
+            MyDbContext.ChangeTracker.Clear();
+            
+            var contactToRemove = MyDbContext.Contacts
+                .Include(c => c.ContactTags)
+                .First(c => c.Id == contact.Id);
+            
+            MyDbContext.Contacts.Remove(contactToRemove);
+            MyDbContext.SaveChanges();
+            // 使用新的刷新方法
+            RefreshContacts();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            HasError = true;
+        }
     }
 
     public void SetContactAvatar(Bitmap img, string url)
@@ -143,6 +252,16 @@ public partial class ContactViewModel : ViewModelBase
         if (ContactData != null)
         {
             ContactData.Tags = value;
+        }
+    }
+
+    private void RefreshContacts()
+    {
+        var contacts = GetContacts();
+        Contacts.Clear();
+        foreach (var contact in contacts)
+        {
+            Contacts.Add(contact);
         }
     }
 }

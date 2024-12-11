@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace MyMoney.Models;
@@ -38,13 +39,16 @@ public class Contact : BaseModel
     public string? Avatar { get; set; }
 
     // 外键关系
-    public Category? Category { get; set; }
+    public virtual Category? Category { get; set; }
     public int? CategoryId { get; set; }
 
     // 多对多关系
-    public List<Tag>? Tags { get; set; }
+    public virtual ICollection<ContactTag> ContactTags { get; set; } = new List<ContactTag>();
 
-    public Contact()
+    [NotMapped]
+    public virtual ICollection<Tag> Tags
     {
+        get => ContactTags.Select(ct => ct.Tag).ToList();
+        set => ContactTags = value.Select(t => new ContactTag { Tag = t }).ToList();
     }
 }

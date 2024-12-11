@@ -10,6 +10,8 @@ namespace MyMoney.ViewModels;
 
 public partial class WorkViewModel : ViewModelBase
 {
+    [ObservableProperty] private bool _hasError;
+    [ObservableProperty] private string? _errorMessage;
     public ObservableCollection<Work> Works { get; set; }
 
     [ObservableProperty] private Work _workData;

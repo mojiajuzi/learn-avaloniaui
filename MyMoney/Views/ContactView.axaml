@@ -103,7 +103,7 @@
                                       ItemsSource="{Binding CategoryDataList}"
                                       Width="200"
                                       AutoScrollToSelectedItem="True"
-                                      SelectedItem="{Binding ContactData.Category}"
+                                      SelectedItem="{Binding SelectedCategory}"
                                       MaxDropDownHeight="200">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
@@ -150,7 +150,7 @@
                                     Content="Cancel" />
                             <Button Classes="Update"
                                     HorizontalAlignment="Right"
-                                    Command="{Binding SubmitCommandCommand}"
+                                    Command="{Binding SubmitContactCommand}"
                                     Content="Submit" />
                         </UniformGrid>
                     </StackPanel>
