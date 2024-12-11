@@ -41,11 +41,16 @@ namespace MyMoney.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Status")
@@ -56,7 +61,10 @@ namespace MyMoney.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("categories");
                 });
 
             modelBuilder.Entity("MyMoney.Models.Contact", b =>
@@ -66,6 +74,7 @@ namespace MyMoney.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Avatar")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("CategoryId")
@@ -75,6 +84,7 @@ namespace MyMoney.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDeleted")
@@ -82,15 +92,19 @@ namespace MyMoney.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("QQ")
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Status")
@@ -100,13 +114,17 @@ namespace MyMoney.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Wechat")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Contact");
+                    b.HasIndex("Phone")
+                        .IsUnique();
+
+                    b.ToTable("contacts");
                 });
 
             modelBuilder.Entity("MyMoney.Models.Tag", b =>
@@ -137,6 +155,9 @@ namespace MyMoney.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Tags");
                 });

@@ -6,46 +6,56 @@ using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
+using MyMoney.DatabaseService;
 using MyMoney.Models;
 
 namespace MyMoney.ViewModels;
 
 public partial class CategoryViewModel : ViewModelBase
 {
-    private const int ItemsPerPage = 15;
+    [ObservableProperty] private bool _hasError;
+    [ObservableProperty] private string? _errorMessage;
 
-    private List<Category> _categoryDataList = new List<Category>();
-
-    [ObservableProperty] private int _currentPage = 1;
-
-    [ObservableProperty] private int _totalPages = 0;
-
-    [ObservableProperty] private bool _popupOpen = false;
+    [ObservableProperty] private bool _popupOpen;
 
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(Category))]
     private ObservableCollection<Category> _categories;
 
     [ObservableProperty] private Category _category;
 
-    public CategoryViewModel()
+    public CategoryViewModel(AppDbContext dbContext) : base(dbContext)
     {
-        Categories = new ObservableCollection<Category>();
+        Categories = new ObservableCollection<Category>(GetCategories());
         Category = new Category();
-        GetCategories();
+    }
+
+    private List<Category> GetCategories()
+    {
+        return AppDbContext.Categories.AsNoTracking().ToList();
     }
 
 
     [RelayCommand]
     private void ToggleSwitchChanged(Category category)
     {
-        Category item = Categories.FirstOrDefault(c => c.Id == category.Id);
-        if (item != null)
+        try
         {
-            item.Status = !item.Status;
-        }
+            AppDbContext.ChangeTracker.Clear();
 
-        var notificationObj = CreateNotification("Changed", "Category", NotificationType.Success);
-        App.NotificationManager?.Show(notificationObj);
+            Category item = Categories.FirstOrDefault(c => c.Id == category.Id);
+
+            if (item == null) return;
+
+            AppDbContext.Categories.Attach(item);
+            AppDbContext.Entry(item).State = EntityState.Modified;
+            AppDbContext.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            ShowNotification("Error", e.Message, NotificationType.Error);
+            return;
+        }
     }
 
     [RelayCommand]
@@ -54,6 +64,11 @@ public partial class CategoryViewModel : ViewModelBase
         if (PopupOpen)
         {
             Category = new Category();
+        }
+        else
+        {
+            HasError = false;
+            ErrorMessage = string.Empty;
         }
 
         PopupOpen = !PopupOpen;
@@ -67,86 +82,69 @@ public partial class CategoryViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private Task SubmitCategory()
+    private async Task SubmitCategory()
     {
+        //数据验证
+        if (!Category.Validate(out var results))
+        {
+            HasError = true;
+            ErrorMessage = string.Join(Environment.NewLine, results.Select(r => r.ErrorMessage));
+            return;
+        }
+
         try
         {
+            //check name unique
+            var exiting = AppDbContext.Categories.AsNoTracking()
+                .FirstOrDefault(c => c.Name == Category.Name && c.Id != Category.Id);
+            if (exiting != null)
+            {
+                HasError = true;
+                ErrorMessage = $"Category {Category.Name} already exists.";
+                return;
+            }
+
             if (Category.Id > 0)
             {
                 var index = Categories.IndexOf(Categories.FirstOrDefault(x => x.Id == Category.Id));
                 if (index != -1)
                 {
+                    AppDbContext.Categories.Update(Category);
+                    await AppDbContext.SaveChangesAsync();
                     Categories.RemoveAt(index);
                     Categories.Insert(index, Category);
-                    var notificationObj = CreateNotification("Update", "Category updated", NotificationType.Success);
-                    App.NotificationManager?.Show(notificationObj);
                 }
             }
             else
             {
-                Category.CreatedAt = DateTime.Now;
-                Category.UpdatedAt = DateTime.Now;
+                AppDbContext.Categories.Add(Category);
+                await AppDbContext.SaveChangesAsync();
                 Categories.Add(Category);
-                var notificationObj = CreateNotification("Create", "Category Created", NotificationType.Success);
-                App.NotificationManager?.Show(notificationObj);
             }
 
-            PopupToggleSwitchChanged();
+            PopupOpen = false;
+            Category = new Category();
         }
         catch (Exception ex)
         {
-            var notificationObj = CreateNotification("Error", ex.Message, NotificationType.Error);
-            App.NotificationManager?.Show(notificationObj);
+            HasError = true;
+            ErrorMessage = ex.Message;
         }
-
-        return Task.CompletedTask;
     }
 
     [RelayCommand]
     private void DeleteCategory(Category category)
     {
-        var r = Categories.Remove(category);
-    }
-
-    private void GetCategories()
-    {
-        if (_categoryDataList.Count == 0)
+        try
         {
-            _categoryDataList = Category.GetGenareData();
+            AppDbContext.Categories.Remove(category);
+            AppDbContext.SaveChanges();
+            Categories.Remove(category);
+            ShowNotification("Success", "Category deleted", NotificationType.Success);
         }
-
-        int totalItems = _categoryDataList.Count;
-        TotalPages = (totalItems + ItemsPerPage - 1) / ItemsPerPage;
-        var items = GetCategoryForPage(CurrentPage);
-        Categories.Clear();
-        foreach (var item in items)
+        catch (Exception e)
         {
-            Categories.Add(item);
+            ShowNotification("Error", e.Message, NotificationType.Error);
         }
-    }
-
-    [RelayCommand]
-    private void GoToNextPage()
-    {
-        if (CurrentPage < TotalPages)
-        {
-            CurrentPage++;
-            GetCategories();
-        }
-    }
-
-    [RelayCommand]
-    private void GoToPreviousPage()
-    {
-        if (CurrentPage > 1)
-        {
-            CurrentPage--;
-            GetCategories();
-        }
-    }
-
-    private IEnumerable<Category> GetCategoryForPage(int pageNumber)
-    {
-        return _categoryDataList.Skip((pageNumber - 1) * ItemsPerPage).Take(ItemsPerPage);
     }
 }

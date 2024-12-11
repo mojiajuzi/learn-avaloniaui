@@ -2,21 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyMoney.Models;
 
 [Table("Tags")]
+[Index(nameof(Name), IsUnique = true)]
 public class Tag : BaseModel
 {
-    [Required]
-    [MaxLength(50)]
+    [Required(ErrorMessage = "名称不能为空")]
+    [MaxLength(50, ErrorMessage = "名称长度不能超过50个字符")]
     public string Name { get; set; } = null!;
 
-    [Required]
-    public bool Status { get; set; } = true;
+    [Required(ErrorMessage = "状态不能为空")]
+    public bool Status { get; set; }
 
     // 添加描述属性
-    [MaxLength(200)]
+    [MaxLength(200, ErrorMessage = "描述长度不能超过200个字符")]
     public string? Description { get; set; }
 
     // 多对多关系

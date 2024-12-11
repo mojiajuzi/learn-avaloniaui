@@ -49,7 +49,6 @@ public class Work : BaseModel
                 TotalMoney = 1000 * i,
                 Status = WorkStatus.PreStart,
                 ReceivingPayment = 100 * i,
-                Contacts = Contact.GenerateContacts()
             });
         }
 

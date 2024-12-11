@@ -13,7 +13,7 @@ public partial class WorkViewModel : ViewModelBase
     public ObservableCollection<Work> Works { get; set; }
 
     [ObservableProperty] private Work _workData;
-    [ObservableProperty] private List<Contact> _contactData = Contact.GenerateContacts();
+    [ObservableProperty] private List<Contact> _contactData = [];
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private ObservableCollection<Contact>? _filteredContacts;
     [ObservableProperty] private bool _popupOpen;
@@ -32,7 +32,7 @@ public partial class WorkViewModel : ViewModelBase
     [ObservableProperty] private Expense _expenseData;
     [ObservableProperty] private DateTimeOffset _selectedExpenseDate;
     [ObservableProperty] private Category? _selectedCategory;
-    [ObservableProperty] private List<Category> _categories = Category.GetGenareData();
+    [ObservableProperty] private List<Category> _categories = [];
 
     public WorkViewModel()
     {

@@ -38,14 +38,25 @@
                 VerticalAlignment="Top">
                 <Border Classes="Popup">
                     <StackPanel Classes="Popup">
+                        <TextBlock Classes="ShowError"
+                                   IsVisible="{Binding HasError}"
+                                   Foreground="{DynamicResource ErrorBrush}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,10"
+                                   Text="{Binding ErrorMessage}" />
+                        <Label Content="Name"></Label>
                         <TextBox Name="Name"
                                  Text="{Binding Category.Name}"
                                  Watermark="Category Name" />
 
+                        <Label Content="Status"></Label>
                         <ToggleSwitch Name="Status"
                                       IsChecked="{Binding Category.Status}"
                                       OnContent="On"
                                       OffContent="Off" />
+                        <Label Content="Description"></Label>
+                        <TextBox Name="Description"
+                                 Text="{Binding Category.Description}" />
 
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"

@@ -10,13 +10,14 @@ namespace MyMoney.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _isPanOpen = true;
-    [ObservableProperty] private ViewModelBase _currentPage = new CategoryViewModel();
+    [ObservableProperty] private ViewModelBase _currentPage;
 
     private readonly DbContextFactory _dbContextFactory;
 
-    public MainViewModel(DbContextFactory dbContextFactory)
+    public MainViewModel(DbContextFactory dbContextFactory) : base(dbContextFactory.CreateDbContext())
     {
         _dbContextFactory = dbContextFactory;
+        CurrentPage = new CategoryViewModel(AppDbContext);
     }
 
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
@@ -39,7 +40,7 @@ public partial class MainViewModel : ViewModelBase
     partial void OnSelectedItemChanged(ListItemTemplate? value)
     {
         if (value is null) return;
-        var instance = Activator.CreateInstance(value.ViewModelType);
+        var instance = Activator.CreateInstance(value.ViewModelType, AppDbContext);
         if (instance is null) return;
         CurrentPage = (ViewModelBase)instance;
     }

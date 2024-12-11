@@ -42,7 +42,7 @@
                                       OnContent="Active"
                                       OffContent="InActive"
                                       IsChecked="{Binding TagData.Status}" />
-
+                        <TextBox Name="Description" Watermark="Description" Text="{Binding TagData.Description}" />
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"
                                     Spacing="16">
@@ -75,11 +75,19 @@
                                         </StackPanel>
                                         <StackPanel Classes="icon">
                                             <TextBlock Classes="label" Text="Status" />
-                                            <ToggleSwitch IsChecked="{Binding Status}"></ToggleSwitch>
+                                            <ToggleSwitch
+                                                Command="{Binding #Root.((vm:TagViewModel)DataContext).ToggleSwitchChangedCommand}"
+                                                CommandParameter="{Binding .}"
+                                                IsChecked="{Binding Status}">
+                                            </ToggleSwitch>
                                         </StackPanel>
                                         <StackPanel Classes="icon">
                                             <TextBlock Classes="label" Text="Update" />
                                             <TextBlock Text="{Binding UpdatedAt, StringFormat={}{0:yyyy-MM-dd}}"></TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Classes="icon">
+                                            <TextBlock Classes="label" Text="Description"></TextBlock>
+                                            <TextBlock Text="{Binding Description}"></TextBlock>
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">

@@ -1,75 +1,50 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Transactions;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyMoney.Models;
 
+[Table("contacts")]
+[Index(nameof(Phone), IsUnique = true)]
 public class Contact : BaseModel
 {
+    [Required(ErrorMessage = "姓名不能为空")]
+    [MaxLength(50, ErrorMessage = "姓名长度不能超过50个字符")]
     public string Name { get; set; } = null!;
+
+    [EmailAddress(ErrorMessage = "邮箱格式不正确")]
+    [MaxLength(100, ErrorMessage = "邮箱长度不能超过100个字符")]
     public string? Email { get; set; }
+
+    [Phone(ErrorMessage = "电话号码格式不正确")]
+    [MaxLength(20, ErrorMessage = "电话号码长度不能超过20个字符")]
     public string? Phone { get; set; }
+
+    [MaxLength(50, ErrorMessage = "微信号长度不能超过50个字符")]
     public string? Wechat { get; set; }
+
+    [MaxLength(20, ErrorMessage = "QQ号长度不能超过20个字符")]
+    [RegularExpression(@"^\d{5,11}$", ErrorMessage = "QQ号格式不正确")]
     public string? QQ { get; set; }
+
+    [MaxLength(500, ErrorMessage = "备注长度不能超过500个字符")]
     public string? Remark { get; set; }
-    public bool Status { get; set; }
+
+    [Required(ErrorMessage = "状态不能为空")] public bool Status { get; set; }
+
+    [MaxLength(500, ErrorMessage = "头像路径长度不能超过500个字符")]
     public string? Avatar { get; set; }
+
+    // 外键关系
     public Category? Category { get; set; }
+    public int? CategoryId { get; set; }
+
+    // 多对多关系
     public List<Tag>? Tags { get; set; }
 
     public Contact()
     {
-    }
-
-    public Contact(string name, string email, string phone, string wechat, string qq, string remark, bool status,
-        string avatar)
-    {
-        Name = name;
-        Email = email;
-        Phone = phone;
-        Wechat = wechat;
-        QQ = qq;
-        Remark = remark;
-        Status = status;
-        Avatar = avatar;
-        CreatedAt = DateTime.Now;
-        UpdatedAt = DateTime.Now;
-    }
-
-    public static List<Contact> GenerateContacts()
-    {
-        return new List<Contact>()
-        {
-            new Contact()
-            {
-                Id = 1,
-                Name = "John one",
-                Email = "johndoe@gmail.com",
-                Phone = "088888888",
-                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Category = Models.Category.GetGenareData().First()
-            },
-            new Contact()
-            {
-                Id = 2,
-                Name = "John Two",
-                Email = "johndoe@gmail.com",
-                Phone = "088888888",
-                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                Category = Models.Category.GetGenareData().First()
-            },
-            new Contact()
-            {
-                Id = 3,
-                Name = "John Three",
-                Email = "johndoe@gmail.com",
-                Phone = "088888888",
-                Avatar = "C:\\Users\\mojin\\AppData\\Roaming\\MyMoney\\Uploads\\test.webp",
-                Category = Models.Category.GetGenareData().First()
-            },
-        };
     }
 }

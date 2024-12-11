@@ -1,35 +1,30 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Avalonia.Controls;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyMoney.Models;
 
+[Table("categories")]
+[Index(nameof(Name), IsUnique = true)]
 public class Category : BaseModel
 {
     public Category()
     {
     }
 
-    public Category(int id, string name, DateTime date, bool status)
+    public Category(string name, DateTime date, bool status)
     {
-        Id = id;
         Name = name;
         CreatedAt = date;
         UpdatedAt = date;
         Status = status;
     }
 
-    public string Name { get; set; }
-    public bool Status { get; set; }
+    [Required] [MaxLength(50)] public string Name { get; set; }
+    [Required] public bool Status { get; set; }
 
-    public static List<Category> GetGenareData()
-    {
-        var categories = new List<Category>();
-        for (var i = 0; i < 10; i++)
-        {
-            categories.Add(new Category(i + 1, $"test{i}", DateTime.Now, true));
-        }
-
-        return categories;
-    }
+    [MaxLength(200)] public string? Description { get; set; }
 }

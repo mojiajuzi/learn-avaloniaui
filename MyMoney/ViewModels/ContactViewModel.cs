@@ -36,12 +36,12 @@ public partial class ContactViewModel : ViewModelBase
 
     public ContactViewModel()
     {
-        Contacts = new ObservableCollection<Contact>(Contact.GenerateContacts());
+        Contacts = new ObservableCollection<Contact>([]);
     }
 
     private static List<Category> GenerateCategory()
     {
-        return Category.GetGenareData().OrderBy(x => x.Name).ToList();
+        return [];
     }
 
     private static List<Tag> GenerateTag()
