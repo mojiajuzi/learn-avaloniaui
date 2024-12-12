@@ -48,6 +48,16 @@
         <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}" />
     </Style>
 
+    <Style Selector="Button.Info">
+        <Setter Property="Background" Value="{DynamicResource InfoBrush}"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}"></Setter>
+    </Style>
+
+    <Style Selector="Button.Default">
+        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}"></Setter>
+    </Style>
+
     <Style Selector="Button.Delete:pointerover">
         <Setter Property="Opacity" Value="0.8" />
     </Style>

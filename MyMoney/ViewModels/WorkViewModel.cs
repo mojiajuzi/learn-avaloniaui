@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System;
+using Avalonia.Controls.Notifications;
+using Avalonia.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MyMoney.Models;
 using CommunityToolkit.Mvvm.Input;
@@ -53,6 +55,18 @@ public partial class WorkViewModel : ViewModelBase
         {
             Works = new ObservableCollection<Work>(list);
         }
+    }
+
+    [RelayCommand]
+    private void ShowPopupWithWork(Work work)
+    {
+        WorkData = null;
+        WorkData = work;
+        SelectedStartAt = new DateTimeOffset(work.StartAt);
+        SelectedEndAt = work.EndAt.HasValue
+            ? new DateTimeOffset(work.EndAt.Value)
+            : DateTimeOffset.Now;
+        PopupOpen = true;
     }
 
     partial void OnSearchTextChanged(string value)
@@ -119,14 +133,49 @@ public partial class WorkViewModel : ViewModelBase
             return;
         }
 
-        if (WorkData != null)
+        try
         {
-            MyDbContext.Works.Add(WorkData);
-            MyDbContext.SaveChanges();
-        }
+            if (WorkData != null)
+            {
+                //Update 
+                if (WorkData.Id > 0)
+                {
+                    var existsing = MyDbContext.Works.AsNoTracking().FirstOrDefault(w => w.Id == WorkData.Id);
+                    if (existsing != null)
+                    {
+                        existsing = WorkData;
+                        MyDbContext.Works.Update(existsing);
+                        MyDbContext.Entry(existsing).State = EntityState.Modified;
+                        MyDbContext.SaveChanges();
+                        var index = Works.IndexOf(Works.FirstOrDefault(w => w.Id == existsing.Id));
+                        Works.RemoveAt(index);
+                        Works.Insert(index, existsing);
+                        ShowNotification("Success", "Success", NotificationType.Success);
+                    }
+                    else
+                    {
+                        HasError = true;
+                        ErrorMessage = $"Work {WorkData.Name} does not exist.";
+                        return;
+                    }
+                }
+                else
+                {
+                    //Create
+                    MyDbContext.Works.Add(WorkData);
+                    MyDbContext.SaveChanges();
+                    Works.Add(WorkData);
+                }
+            }
 
-        WorkData = new Work();
-        PopupOpen = false;
+            WorkData = new Work();
+            PopupOpen = false;
+        }
+        catch (Exception e)
+        {
+            HasError = true;
+            ErrorMessage = e.Message;
+        }
     }
 
     partial void OnSelectedStartAtChanged(DateTimeOffset value)

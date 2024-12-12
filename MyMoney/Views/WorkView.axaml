@@ -201,14 +201,20 @@
                             </TextBox>
                             <StackPanel>
                                 <TextBlock Text="Start Date"></TextBlock>
-                                <DatePicker DayFormat="dd" MonthFormat="MM" YearFormat="yyyy"
-                                            SelectedDate="{Binding SelectedStartAt}">
+                                <DatePicker
+                                    YearFormat="yyyy"
+                                    MonthFormat="MM"
+                                    DayFormat="dd"
+                                    SelectedDate="{Binding SelectedStartAt}">
                                 </DatePicker>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="End Date"></TextBlock>
-                                <DatePicker DayFormat="dd" MonthFormat="MM" YearFormat="yyyy"
-                                            SelectedDate="{Binding SelectedEndAt}">
+                                <DatePicker
+                                    YearFormat="yyyy"
+                                    MonthFormat="MM"
+                                    DayFormat="dd"
+                                    SelectedDate="{Binding SelectedEndAt}">
                                 </DatePicker>
                             </StackPanel>
                             <UniformGrid Rows="1" Columns="2">
@@ -264,40 +270,45 @@
                                         </StackPanel>
 
                                         <StackPanel Orientation="Vertical" Spacing="4">
-                                            <StackPanel Orientation="Horizontal">
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
                                                 <StackPanel Classes="icon">
                                                     <i:Icon Value="fa-thin fa-calendar-days" />
                                                     <TextBlock Text="Start" Classes="label" />
                                                     <TextBlock
                                                         Text="{Binding StartAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
                                                 </StackPanel>
-                                                <StackPanel>
+                                                <!--
+                                                <StackPanel Grid.Column="2">
                                                     <Button Classes="Action Info">
-                                                        <StackPanel Classes="icon" Orientation="Horizontal">
+                                                        <StackPanel Orientation="Horizontal">
                                                             <i:Icon Value="fa-thin fa-user"></i:Icon>
                                                             <TextBlock Text="Contact"></TextBlock>
                                                         </StackPanel>
                                                     </Button>
                                                 </StackPanel>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <StackPanel Classes="icon">
+                                                -->
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                                <StackPanel Classes="icon" HorizontalAlignment="Right"
+                                                            VerticalAlignment="Stretch">
                                                     <i:Icon Value="fa-thin fa-calendar-check" />
                                                     <TextBlock Text="End" Classes="label" />
                                                     <TextBlock Text="{Binding EndAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
                                                 </StackPanel>
-                                                <StackPanel>
-                                                    <Button Classes="Action">
-                                                        <StackPanel Orientation="Horizontal" Classes="icon">
+                                                <!--
+                                                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                                    <Button Classes="Action Default">
+                                                        <StackPanel Orientation="Horizontal">
                                                             <i:Icon Value="fa-thin fa-ticket"></i:Icon>
                                                             <TextBlock Text="Expenes"></TextBlock>
                                                         </StackPanel>
                                                     </Button>
                                                 </StackPanel>
-                                            </StackPanel>
+                                                -->
+                                            </Grid>
                                         </StackPanel>
 
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
                                             <Button Classes="Action Info"
                                                     Command="{Binding #Root.((vm:WorkViewModel)DataContext).ShowWorkDetailCommand}"
                                                     CommandParameter="{Binding .}">
@@ -306,7 +317,9 @@
                                                     <TextBlock Text="Show" />
                                                 </StackPanel>
                                             </Button>
-                                            <Button Classes="Action Update">
+                                            <Button Classes="Action Update"
+                                                    Command="{Binding #Root.((vm:WorkViewModel)DataContext).ShowPopupWithWorkCommand}"
+                                                    CommandParameter="{Binding .}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <i:Icon Value="fa-thin fa-edit"></i:Icon>
                                                     <TextBlock Text="Edit" />
